@@ -8,7 +8,6 @@ public class FishingRod : UdonSharpBehaviour
     [Header("Rod Settings")]
     public int rodLevel = 1;
     public float maxLineLength = 15f;
-    public float throwSpeed = 5f;
     public float rewindSpeed = 5f;
 
     [Header("References")]
@@ -16,7 +15,7 @@ public class FishingRod : UdonSharpBehaviour
     public Transform hook;
     public LineRenderer lineRenderer;
 
-    [Header("Input Flags (Set by external logic)")]
+    [Header("Input Flags")]
     public bool triggerHeld = false;
     public bool rewindPressed = false;
 
@@ -29,7 +28,7 @@ public class FishingRod : UdonSharpBehaviour
 
     void Start()
     {
-        ResetLine();
+        
     }
 
     void Update()
@@ -50,16 +49,6 @@ public class FishingRod : UdonSharpBehaviour
         {
             ExtendLine();
         }
-
-        if (rewindPressed && isCasting)
-        {
-            isRewinding = true;
-        }
-
-        if (isRewinding)
-        {
-            RewindLine();
-        }
     }
 
     private void BeginCast()
@@ -72,7 +61,7 @@ public class FishingRod : UdonSharpBehaviour
 
     private void ExtendLine()
     {
-        currentLineLength += throwSpeed * Time.deltaTime;
+        currentLineLength +=  Time.deltaTime;
         currentLineLength = Mathf.Min(currentLineLength, maxLineLength);
 
         Vector3 wobble = new Vector3(
@@ -86,49 +75,22 @@ public class FishingRod : UdonSharpBehaviour
 
     private void RewindLine()
     {
-        currentLineLength -= rewindSpeed * Time.deltaTime;
-
-        currentLineLength = Mathf.Max(currentLineLength, 0f);
-        hook.position = rodTip.position + castDirection * currentLineLength;
-
-        if (caughtAsteroid != null)
-        {
-            caughtAsteroid.transform.position = hook.position;
-        }
-
-        if (currentLineLength <= 1f)
-        {
-            FinishCatch();
-        }
+        
     }
 
     private void FinishCatch()
     {
-        if (caughtAsteroid != null)
-        {
-            caughtAsteroid.SetActive(false); // Or notify game logic to convert to fuel
-            caughtAsteroid = null;
-        }
-
-        ResetLine();
+        
     }
 
     private void ResetLine()
     {
-        isCasting = false;
-        isRewinding = false;
-        currentLineLength = 0f;
-        hook.position = rodTip.position;
+        
     }
 
     private void UpdateLineRenderer()
     {
-        if (lineRenderer)
-        {
-            lineRenderer.positionCount = 2;
-            lineRenderer.SetPosition(0, rodTip.position);
-            lineRenderer.SetPosition(1, hook.position);
-        }
+        
     }
 
     public void OnTriggerEnter(Collider other)
@@ -147,6 +109,7 @@ public class FishingRod : UdonSharpBehaviour
     public override void OnPickupUseDown()
     {
         triggerHeld = true;
+        hook.parent = this.gameObject.transform.parent;
     }
 
     public override void OnPickupUseUp()
