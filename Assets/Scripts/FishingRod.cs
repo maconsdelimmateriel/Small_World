@@ -35,62 +35,103 @@ public class FishingRod : UdonSharpBehaviour
     {
         UpdateLineRenderer();
 
+        //2. 
         if (!isCasting && triggerHeld)
         {
             BeginCast();
         }
 
-        if (isCasting && !triggerHeld && !isRewinding)
-        {
-            isCasting = false; // cancel cast if trigger released early
-        }
-
+        //4.
         if (isCasting && !isRewinding && currentLineLength < maxLineLength)
         {
             ExtendLine();
         }
+
+        //B.
+        if (isCasting && !triggerHeld && !isRewinding)
+        {
+            isCasting = false; // cancel cast if trigger released early
+            isRewinding = true;
+        }
+
+        //C.
+        if (isRewinding)
+        {
+            RewindLine();
+        }
     }
 
+    //3.
     private void BeginCast()
     {
         isCasting = true;
         isRewinding = false;
         currentLineLength = 0f;
-        castDirection = rodTip.forward;
+        castDirection = rodTip.up;
     }
 
+    //5.
     private void ExtendLine()
     {
         currentLineLength +=  Time.deltaTime;
         currentLineLength = Mathf.Min(currentLineLength, maxLineLength);
 
-        Vector3 wobble = new Vector3(
+        /*Vector3 wobble = new Vector3(
             Mathf.PerlinNoise(Time.time * 3f, 0f) - 0.5f,
             Mathf.PerlinNoise(0f, Time.time * 3f) - 0.5f,
             0f
-        ) * 0.2f;
+        ) * 0.2f;*/
 
-        hook.position = rodTip.position + castDirection * currentLineLength + wobble;
+        hook.position = rodTip.position + castDirection * currentLineLength /*+ wobble*/;
     }
 
+    //D.
     private void RewindLine()
     {
-        
+        currentLineLength -= rewindSpeed * Time.deltaTime;
+
+        currentLineLength = Mathf.Max(currentLineLength, 0f);
+        hook.position = rodTip.position + castDirection * currentLineLength;
+
+        if (caughtAsteroid != null)
+        {
+            caughtAsteroid.transform.position = hook.position;
+        }
+
+        if (currentLineLength <= 1f)
+        {
+            FinishCatch();
+        }
     }
 
     private void FinishCatch()
     {
-        
+        if (caughtAsteroid != null)
+        {
+            caughtAsteroid.SetActive(false); // Or notify game logic to convert to fuel
+            caughtAsteroid = null;
+        }
+
+        ResetLine();
     }
 
     private void ResetLine()
     {
-        
+        isCasting = false;
+        isRewinding = false;
+        currentLineLength = 0f;
+        hook.position = rodTip.position;
+        hook.parent = this.gameObject.transform;
     }
 
     private void UpdateLineRenderer()
     {
-        
+        if (lineRenderer)
+        {
+            lineRenderer.positionCount = 2;
+            lineRenderer.SetPosition(0, rodTip.position);
+            lineRenderer.SetPosition(1, hook.position);
+        }
     }
 
     public void OnTriggerEnter(Collider other)
@@ -106,12 +147,14 @@ public class FishingRod : UdonSharpBehaviour
         }
     }
 
+    //1. Trigger is held down.
     public override void OnPickupUseDown()
     {
         triggerHeld = true;
         hook.parent = this.gameObject.transform.parent;
     }
 
+    //A. Trigger is released.
     public override void OnPickupUseUp()
     {
         triggerHeld = false;

@@ -830,7 +830,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8388608
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -1096,7 +1096,7 @@ GameObject:
   - component: {fileID: 894121379}
   - component: {fileID: 894121378}
   - component: {fileID: 894121377}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Hook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
