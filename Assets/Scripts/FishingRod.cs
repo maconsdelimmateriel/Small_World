@@ -16,18 +16,19 @@ public class FishingRod : UdonSharpBehaviour
     public Transform rodTip;
     public Transform hook;
     public LineRenderer lineRenderer;
+    public Transform lineTip;
 
     [Header("Input Flags")]
     public bool triggerHeld = false;
     public bool rewindPressed = false;
 
     private bool isCasting = false;
-    private bool isRewinding = false;
-    private float currentLineLength = 0f;
+    public bool isRewinding = false;
+    public float currentLineLength = 0f;
     
 
     private Vector3 castDirection;
-    private GameObject caughtAsteroid;
+    public GameObject caughtAsteroid;
 
     void Start()
     {
@@ -48,6 +49,10 @@ public class FishingRod : UdonSharpBehaviour
         if (isCasting && !isRewinding && currentLineLength < maxLineLength)
         {
             ExtendLine();
+        }
+        else if (currentLineLength >= maxLineLength)
+        {
+            WobbleHook();
         }
 
         //B.
@@ -79,15 +84,18 @@ public class FishingRod : UdonSharpBehaviour
         currentLineLength +=  Time.deltaTime;
         currentLineLength = Mathf.Min(currentLineLength, maxLineLength);
 
+        hook.position = rodTip.position + castDirection * currentLineLength;
+    }
+
+    private void WobbleHook()
+    {
         Vector3 wobble = new Vector3(
             Mathf.PerlinNoise(Time.time * _wobblingSpeed, 0f) - 0.5f,
             Mathf.PerlinNoise(0f, Time.time * _wobblingSpeed) - 0.5f,
             0f
         ) * _wobblingAmplitude;
 
-        
-         hook.position = rodTip.position + castDirection * currentLineLength + wobble;
-        
+        hook.position = rodTip.position + castDirection * currentLineLength + wobble;
     }
 
     //D.
@@ -139,7 +147,21 @@ public class FishingRod : UdonSharpBehaviour
         }
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void CatchAsteroid(GameObject asteroidObj)
+    {
+        caughtAsteroid = asteroidObj;
+        isCasting = false;
+        isRewinding = false;
+        rewindPressed = true;
+
+        // Optional: stick asteroid to hook
+        asteroidObj.transform.SetParent(lineTip);
+        asteroidObj.transform.localPosition = Vector3.zero;
+        //asteroidObj.transform.localPosition = new Vector3(0f, 0f, -0.1f);
+        asteroidObj.GetComponent<SphereCollider>().enabled = false;
+    }
+
+    /*public void OnTriggerEnter(Collider other)
     {
         if (!isCasting || isRewinding || caughtAsteroid != null) return;
 
@@ -150,7 +172,7 @@ public class FishingRod : UdonSharpBehaviour
             caughtAsteroid = other.gameObject;
             isRewinding = true;
         }
-    }
+    }*/
 
     //1. Trigger is held down.
     public override void OnPickupUseDown()

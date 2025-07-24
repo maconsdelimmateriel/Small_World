@@ -30,6 +30,8 @@ public class SmallAsteroid : UdonSharpBehaviour
     private float angle;
     private float orbitSpeed; // final speed used
 
+    public bool isCaught = false;
+
     void OnEnable()
     {
         angle = randomizeStartAngle ? Random.Range(0f, Mathf.PI * 2f) : startAngle;
@@ -38,7 +40,7 @@ public class SmallAsteroid : UdonSharpBehaviour
 
     void Update()
     {
-        if (orbitCenter == null) return;
+        if (orbitCenter == null || isCaught) return;
 
         // Advance angle over time
         angle += orbitSpeed * Time.deltaTime;
