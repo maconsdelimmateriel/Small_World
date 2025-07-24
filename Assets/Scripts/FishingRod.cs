@@ -9,6 +9,8 @@ public class FishingRod : UdonSharpBehaviour
     public int rodLevel = 1;
     public float maxLineLength = 15f;
     public float rewindSpeed = 5f;
+    [SerializeField] private float _wobblingSpeed = 3f;
+    [SerializeField] private float _wobblingAmplitude = 0.2f;
 
     [Header("References")]
     public Transform rodTip;
@@ -22,6 +24,7 @@ public class FishingRod : UdonSharpBehaviour
     private bool isCasting = false;
     private bool isRewinding = false;
     private float currentLineLength = 0f;
+    
 
     private Vector3 castDirection;
     private GameObject caughtAsteroid;
@@ -76,13 +79,15 @@ public class FishingRod : UdonSharpBehaviour
         currentLineLength +=  Time.deltaTime;
         currentLineLength = Mathf.Min(currentLineLength, maxLineLength);
 
-        /*Vector3 wobble = new Vector3(
-            Mathf.PerlinNoise(Time.time * 3f, 0f) - 0.5f,
-            Mathf.PerlinNoise(0f, Time.time * 3f) - 0.5f,
+        Vector3 wobble = new Vector3(
+            Mathf.PerlinNoise(Time.time * _wobblingSpeed, 0f) - 0.5f,
+            Mathf.PerlinNoise(0f, Time.time * _wobblingSpeed) - 0.5f,
             0f
-        ) * 0.2f;*/
+        ) * _wobblingAmplitude;
 
-        hook.position = rodTip.position + castDirection * currentLineLength /*+ wobble*/;
+        
+         hook.position = rodTip.position + castDirection * currentLineLength + wobble;
+        
     }
 
     //D.

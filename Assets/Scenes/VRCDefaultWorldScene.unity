@@ -779,6 +779,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 483846065}
   triggerHeld: 0
   rewindPressed: 0
+  _wobblingIntensity: 30
 --- !u!114 &483846068
 MonoBehaviour:
   m_ObjectHideFlags: 0
