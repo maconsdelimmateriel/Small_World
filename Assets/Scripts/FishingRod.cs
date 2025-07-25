@@ -119,13 +119,13 @@ public class FishingRod : UdonSharpBehaviour
 
     private void FinishCatch()
     {
-        if (caughtAsteroid != null)
+        /*if (caughtAsteroid != null)
         {
             caughtAsteroid.SetActive(false); // Or notify game logic to convert to fuel
             caughtAsteroid = null;
         }
 
-        ResetLine();
+        ResetLine();*/
     }
 
     private void ResetLine()
@@ -150,9 +150,9 @@ public class FishingRod : UdonSharpBehaviour
     public void CatchAsteroid(GameObject asteroidObj)
     {
         caughtAsteroid = asteroidObj;
-        isCasting = false;
+        //isCasting = false;
         isRewinding = false;
-        rewindPressed = true;
+        //rewindPressed = true;
 
         // Optional: stick asteroid to hook
         asteroidObj.transform.SetParent(lineTip);
