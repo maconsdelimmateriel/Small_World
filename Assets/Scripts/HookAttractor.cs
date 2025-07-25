@@ -3,32 +3,39 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
+//Script that handles the attraction of the fishing hook over the asteroids.
 public class HookAttractor : UdonSharpBehaviour
 {
-    public FishingRod rod;
-    public float magneticPullStrength = 5f;
+    [SerializeField] private FishingRod _rod; //Reference to the fishing rod's script.
+    [SerializeField] private float _magneticPullStrength = 5f; //Strength at which an asteroid is pulled toward the hook.
+    private SmallAsteroid _asteroid; 
+
+    public void AttractAsteroid()
+    {
+        _asteroid.isCaught = true;
+
+        // Attract it slowly toward the hook
+        Vector3 direction = (transform.position - _asteroid.transform.position).normalized;
+        _asteroid.transform.position += direction * _magneticPullStrength * Time.deltaTime;
+
+        // Close enough? Then catch it
+        float dist = Vector3.Distance(transform.position, _asteroid.transform.position);
+        if (dist < 0.3f)
+        {
+            _rod.CatchAsteroid(_asteroid.gameObject);
+        }
+    }
 
     private void OnTriggerStay(Collider other)
     {
         Debug.Log("Hook trigger detected: " + other.name);
 
-        if (!rod.triggerHeld || rod.isRewinding || rod.caughtAsteroid != null || rod.currentLineLength < rod.maxLineLength) return;
+        if (!_rod.triggerHeld || _rod.isRewinding || _rod.caughtAsteroid != null || _rod.currentLineLength < _rod.maxLineLength) return;
 
         // Check if the object is a valid asteroid
-        SmallAsteroid asteroid = other.GetComponent<SmallAsteroid>();
-        if (asteroid == null) return;
+        _asteroid = other.GetComponent<SmallAsteroid>();
+        if (_asteroid == null) return;
 
-        asteroid.isCaught = true;
-
-        // Attract it slowly toward the hook
-        Vector3 direction = (transform.position - asteroid.transform.position).normalized;
-        asteroid.transform.position += direction * magneticPullStrength * Time.deltaTime;
-
-        // Close enough? Then catch it
-        float dist = Vector3.Distance(transform.position, asteroid.transform.position);
-        if (dist < 0.3f)
-        {
-            rod.CatchAsteroid(asteroid.gameObject);
-        }
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "AttractAsteroid");
     }
 }

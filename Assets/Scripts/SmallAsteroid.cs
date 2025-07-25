@@ -34,8 +34,7 @@ public class SmallAsteroid : UdonSharpBehaviour
 
     void OnEnable()
     {
-        angle = randomizeStartAngle ? Random.Range(0f, Mathf.PI * 2f) : startAngle;
-        orbitSpeed = randomizeSpeed ? Random.Range(minSpeed, maxSpeed) : baseOrbitSpeed;
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "GenerateOrbit");
     }
 
     void Update()
@@ -57,6 +56,12 @@ public class SmallAsteroid : UdonSharpBehaviour
 
         // Final world position
         transform.position = orbitCenter.position + rotatedPos;
+    }
+
+    public void GenerateOrbit()
+    {
+        angle = randomizeStartAngle ? Random.Range(0f, Mathf.PI * 2f) : startAngle;
+        orbitSpeed = randomizeSpeed ? Random.Range(minSpeed, maxSpeed) : baseOrbitSpeed;
     }
 }
 

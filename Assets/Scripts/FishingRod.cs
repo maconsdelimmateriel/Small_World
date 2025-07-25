@@ -3,91 +3,86 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
+//Script for the fishing rod.
 public class FishingRod : UdonSharpBehaviour
 {
     [Header("Rod Settings")]
-    public int rodLevel = 1;
-    public float maxLineLength = 15f;
-    public float rewindSpeed = 5f;
-    [SerializeField] private float _wobblingSpeed = 3f;
-    [SerializeField] private float _wobblingAmplitude = 0.2f;
+    private int _rodLevel = 1; //Determines level of asteroids this rod can catch.
+    public float maxLineLength = 15f; //Maximum length of the fishing line.
+    [SerializeField] private float _extendingSpeed = 5f; //Speed at which the line extends if trigger is pressed.
+    [SerializeField] private float _rewindSpeed = 5f; //Speed at which the line comes back to the rod when trigger is released.
+    [SerializeField] private float _wobblingSpeed = 3f; //Speed at which the hook woobles in space.
+    [SerializeField] private float _wobblingAmplitude = 0.2f; //Amplitude at which the hook wobbles in space.
+    public float currentLineLength = 0f; //Current length of the casted fishing line.
 
     [Header("References")]
-    public Transform rodTip;
-    public Transform hook;
-    public LineRenderer lineRenderer;
-    public Transform lineTip;
+    [SerializeField] private Transform _rodTip; //Transform of the tip of the fishing rod.
+    [SerializeField] private Transform _hook; //Transform of the hook.
+    [SerializeField] private LineRenderer lineRenderer; //Component that generates the fishing line.
 
-    [Header("Input Flags")]
-    public bool triggerHeld = false;
-    public bool rewindPressed = false;
-
-    private bool isCasting = false;
-    public bool isRewinding = false;
-    public float currentLineLength = 0f;
+    [Header("Booleans")]
+    public bool triggerHeld = false; //Is the trigger held?
+    private bool _rewindPressed = false; //Should the line rewind?
+    public bool isRewinding = false; //Is the line being rewinded?
+    private bool _isCasting = false; //Is the fishing rod in use?
     
+    private Vector3 _castDirection; //Direction at which the fishing line is casted.
+    public GameObject caughtAsteroid; //The asteroid that is currently hooked.
 
-    private Vector3 castDirection;
-    public GameObject caughtAsteroid;
-
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
-        UpdateLineRenderer();
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateLineRenderer");
 
         //2. 
-        if (!isCasting && triggerHeld)
+        if (!_isCasting && triggerHeld)
         {
-            BeginCast();
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "BeginCast");
         }
 
         //4.
-        if (isCasting && !isRewinding && currentLineLength < maxLineLength)
+        if (_isCasting && !isRewinding && currentLineLength < maxLineLength)
         {
-            ExtendLine();
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ExtendLine");
         }
         else if (currentLineLength >= maxLineLength)
         {
-            WobbleHook();
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "WobbleHook");
         }
 
         //B.
-        if (isCasting && !triggerHeld && !isRewinding)
+        if (_isCasting && !triggerHeld && !isRewinding)
         {
-            isCasting = false; // cancel cast if trigger released early
+            _isCasting = false; // cancel cast if trigger released early
             isRewinding = true;
         }
 
         //C.
         if (isRewinding)
         {
-            RewindLine();
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "RewindLine");
         }
     }
 
     //3.
-    private void BeginCast()
+    public void BeginCast()
     {
-        isCasting = true;
+        _isCasting = true;
         isRewinding = false;
         currentLineLength = 0f;
-        castDirection = rodTip.up;
+        _castDirection = _rodTip.up;
     }
 
     //5.
-    private void ExtendLine()
+    public void ExtendLine()
     {
-        currentLineLength +=  Time.deltaTime;
+        currentLineLength +=  Time.deltaTime * _extendingSpeed;
         currentLineLength = Mathf.Min(currentLineLength, maxLineLength);
 
-        hook.position = rodTip.position + castDirection * currentLineLength;
+        _hook.position = _rodTip.position + _castDirection * currentLineLength;
     }
 
-    private void WobbleHook()
+    public void WobbleHook()
     {
         Vector3 wobble = new Vector3(
             Mathf.PerlinNoise(Time.time * _wobblingSpeed, 0f) - 0.5f,
@@ -95,29 +90,29 @@ public class FishingRod : UdonSharpBehaviour
             0f
         ) * _wobblingAmplitude;
 
-        hook.position = rodTip.position + castDirection * currentLineLength + wobble;
+        _hook.position = _rodTip.position + _castDirection * currentLineLength + wobble;
     }
 
     //D.
-    private void RewindLine()
+    public void RewindLine()
     {
-        currentLineLength -= rewindSpeed * Time.deltaTime;
+        currentLineLength -= _rewindSpeed * Time.deltaTime;
 
         currentLineLength = Mathf.Max(currentLineLength, 0f);
-        hook.position = rodTip.position + castDirection * currentLineLength;
+        _hook.position = _rodTip.position + _castDirection * currentLineLength;
 
         if (caughtAsteroid != null)
         {
-            caughtAsteroid.transform.position = hook.position;
+            caughtAsteroid.transform.position = _hook.position;
         }
 
         if (currentLineLength <= 1f)
         {
-            FinishCatch();
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "FinishCatch");
         }
     }
 
-    private void FinishCatch()
+    public void FinishCatch()
     {
         /*if (caughtAsteroid != null)
         {
@@ -128,22 +123,22 @@ public class FishingRod : UdonSharpBehaviour
         ResetLine();*/
     }
 
-    private void ResetLine()
+    public void ResetLine()
     {
-        isCasting = false;
+        _isCasting = false;
         isRewinding = false;
         currentLineLength = 0f;
-        hook.position = rodTip.position;
-        hook.parent = this.gameObject.transform;
+        _hook.position = _rodTip.position;
+        _hook.parent = this.gameObject.transform;
     }
 
-    private void UpdateLineRenderer()
+    public void UpdateLineRenderer()
     {
         if (lineRenderer)
         {
             lineRenderer.positionCount = 2;
-            lineRenderer.SetPosition(0, rodTip.position);
-            lineRenderer.SetPosition(1, hook.position);
+            lineRenderer.SetPosition(0, _rodTip.position);
+            lineRenderer.SetPosition(1, _hook.position);
         }
     }
 
@@ -155,9 +150,8 @@ public class FishingRod : UdonSharpBehaviour
         //rewindPressed = true;
 
         // Optional: stick asteroid to hook
-        asteroidObj.transform.SetParent(lineTip);
+        asteroidObj.transform.SetParent(_hook);
         asteroidObj.transform.localPosition = Vector3.zero;
-        //asteroidObj.transform.localPosition = new Vector3(0f, 0f, -0.1f);
         asteroidObj.GetComponent<SphereCollider>().enabled = false;
     }
 
@@ -178,7 +172,7 @@ public class FishingRod : UdonSharpBehaviour
     public override void OnPickupUseDown()
     {
         triggerHeld = true;
-        hook.parent = this.gameObject.transform.parent;
+        _hook.parent = this.gameObject.transform.parent;
     }
 
     //A. Trigger is released.
