@@ -21,7 +21,7 @@ public class FishingRod : UdonSharpBehaviour
     [SerializeField] private LineRenderer lineRenderer; //Component that generates the fishing line.
 
     [Header("Booleans")]
-    public bool triggerHeld = false; //Is the trigger held?
+    public bool isSecondTrigger = false; //Has the trigger already been pulled once?
     private bool _rewindPressed = false; //Should the line rewind?
     public bool isRewinding = false; //Is the line being rewinded?
     private bool _isCasting = false; //Is the fishing rod in use?
@@ -35,7 +35,7 @@ public class FishingRod : UdonSharpBehaviour
         SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateLineRenderer");
 
         //2. 
-        if (!_isCasting && triggerHeld)
+        if (!_isCasting && isSecondTrigger)
         {
             SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "BeginCast");
         }
@@ -51,7 +51,7 @@ public class FishingRod : UdonSharpBehaviour
         }
 
         //B.
-        if (_isCasting && !triggerHeld && !isRewinding)
+        if (_isCasting && !isSecondTrigger && !isRewinding)
         {
             _isCasting = false; // cancel cast if trigger released early
             isRewinding = true;
@@ -171,13 +171,21 @@ public class FishingRod : UdonSharpBehaviour
     //1. Trigger is held down.
     public override void OnPickupUseDown()
     {
-        triggerHeld = true;
-        _hook.parent = this.gameObject.transform.parent;
+        if(!isSecondTrigger)
+        {
+            isSecondTrigger = true;
+            _hook.parent = this.gameObject.transform.parent;
+        }
+        else
+        {
+            isSecondTrigger = false;
+        }
+        
     }
 
-    //A. Trigger is released.
+    /*//A. Trigger is released.
     public override void OnPickupUseUp()
     {
-        triggerHeld = false;
-    }
+        isSecondTrigger = false;
+    }*/
 }

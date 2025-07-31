@@ -30,7 +30,7 @@ public class HookAttractor : UdonSharpBehaviour
     {
         Debug.Log("Hook trigger detected: " + other.name);
 
-        if (!_rod.triggerHeld || _rod.isRewinding || _rod.caughtAsteroid != null || _rod.currentLineLength < _rod.maxLineLength) return;
+        if (!_rod.isSecondTrigger || _rod.isRewinding || _rod.caughtAsteroid != null || _rod.currentLineLength < _rod.maxLineLength) return;
 
         // Check if the object is a valid asteroid
         _asteroid = other.GetComponent<SmallAsteroid>();
