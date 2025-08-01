@@ -13,6 +13,7 @@ public class FishingRod : UdonSharpBehaviour
     [SerializeField] private float _rewindSpeed = 5f; //Speed at which the line comes back to the rod when trigger is released.
     [SerializeField] private float _wobblingSpeed = 3f; //Speed at which the hook woobles in space.
     [SerializeField] private float _wobblingAmplitude = 0.2f; //Amplitude at which the hook wobbles in space.
+    [SerializeField] private float _arcHeight = 3f; // Controls the arc peak height of the casting.
     public float currentLineLength = 0f; //Current length of the casted fishing line.
 
     [Header("References")]
@@ -25,6 +26,7 @@ public class FishingRod : UdonSharpBehaviour
     private bool _rewindPressed = false; //Should the line rewind?
     public bool isRewinding = false; //Is the line being rewinded?
     private bool _isCasting = false; //Is the fishing rod in use?
+    private bool _isInitialCasting = true;
     
     private Vector3 _castDirection; //Direction at which the fishing line is casted.
     public GameObject caughtAsteroid; //The asteroid that is currently hooked.
@@ -76,10 +78,16 @@ public class FishingRod : UdonSharpBehaviour
     //5.
     public void ExtendLine()
     {
-        currentLineLength +=  Time.deltaTime * _extendingSpeed;
+        currentLineLength += Time.deltaTime * _extendingSpeed;
         currentLineLength = Mathf.Min(currentLineLength, maxLineLength);
 
-        _hook.position = _rodTip.position + _castDirection * currentLineLength;
+        float t = currentLineLength / maxLineLength; // Progress along the cast (0 to 1)
+
+        // Arc: parabola that peaks at t = 0.5
+        float heightOffset = 4 * _arcHeight * t * (1 - t); // max is _arcHeight at midpoint
+
+        Vector3 arcOffset = new Vector3(0f, heightOffset, 0f);
+        _hook.position = _rodTip.position + _castDirection * currentLineLength + arcOffset;
     }
 
     public void WobbleHook()
