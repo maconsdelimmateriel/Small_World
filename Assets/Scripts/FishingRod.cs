@@ -27,7 +27,13 @@ public class FishingRod : UdonSharpBehaviour
     public bool isRewinding = false; //Is the line being rewinded?
     private bool _isCasting = false; //Is the fishing rod in use?
     private bool _isInitialCasting = true;
-    
+    private bool _hasExtendingSoundPlayed = false; //Has the sound for when the line is extending been played?
+    private bool _hasRewindingSoundPlayed = false; //Has the sound for when the line is extending been played?
+
+    [Header("Sounds")]
+    [SerializeField] private AudioSource _extendingLineSound; //Sound played while the fishing line is extending.
+    [SerializeField] private AudioSource _rewindingLineSound; //Sound played while the fishing line is rewinding.
+
     private Vector3 _castDirection; //Direction at which the fishing line is casted.
     public GameObject caughtAsteroid; //The asteroid that is currently hooked.
 
@@ -88,10 +94,18 @@ public class FishingRod : UdonSharpBehaviour
 
         Vector3 arcOffset = new Vector3(0f, heightOffset, 0f);
         _hook.position = _rodTip.position + _castDirection * currentLineLength + arcOffset;
+
+        if(!_hasExtendingSoundPlayed)
+        {
+            _extendingLineSound.Play();
+            _hasExtendingSoundPlayed = true;
+        }
     }
 
     public void WobbleHook()
     {
+        _extendingLineSound.Stop();
+
         Vector3 wobble = new Vector3(
             Mathf.PerlinNoise(Time.time * _wobblingSpeed, 0f) - 0.5f,
             Mathf.PerlinNoise(0f, Time.time * _wobblingSpeed) - 0.5f,
@@ -109,6 +123,12 @@ public class FishingRod : UdonSharpBehaviour
         currentLineLength = Mathf.Max(currentLineLength, 0f);
         _hook.position = _rodTip.position + _castDirection * currentLineLength;
 
+        if (!_hasRewindingSoundPlayed)
+        {
+            _rewindingLineSound.Play();
+            _hasRewindingSoundPlayed = true;
+        }
+
         if (caughtAsteroid != null)
         {
             caughtAsteroid.transform.position = _hook.position;
@@ -122,6 +142,10 @@ public class FishingRod : UdonSharpBehaviour
 
     public void FinishCatch()
     {
+        _rewindingLineSound.Stop();
+        _hasExtendingSoundPlayed = false;
+        _hasRewindingSoundPlayed = false;
+
         /*if (caughtAsteroid != null)
         {
             caughtAsteroid.SetActive(false); // Or notify game logic to convert to fuel
@@ -131,6 +155,7 @@ public class FishingRod : UdonSharpBehaviour
         ResetLine();*/
     }
 
+    //Not used?
     public void ResetLine()
     {
         _isCasting = false;
@@ -138,6 +163,9 @@ public class FishingRod : UdonSharpBehaviour
         currentLineLength = 0f;
         _hook.position = _rodTip.position;
         _hook.parent = this.gameObject.transform;
+
+        _hasExtendingSoundPlayed = false;
+        _hasRewindingSoundPlayed = false;
     }
 
     public void UpdateLineRenderer()
