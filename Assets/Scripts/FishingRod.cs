@@ -97,14 +97,17 @@ public class FishingRod : UdonSharpBehaviour
 
         if(!_hasExtendingSoundPlayed)
         {
-            _extendingLineSound.Play();
+            if(_extendingLineSound != null)
+                _extendingLineSound.Play();
+
             _hasExtendingSoundPlayed = true;
         }
     }
 
     public void WobbleHook()
     {
-        _extendingLineSound.Stop();
+        if (_extendingLineSound != null)
+            _extendingLineSound.Stop();
 
         Vector3 wobble = new Vector3(
             Mathf.PerlinNoise(Time.time * _wobblingSpeed, 0f) - 0.5f,
@@ -125,7 +128,9 @@ public class FishingRod : UdonSharpBehaviour
 
         if (!_hasRewindingSoundPlayed)
         {
-            _rewindingLineSound.Play();
+            if (_rewindingLineSound != null)
+                _rewindingLineSound.Play();
+
             _hasRewindingSoundPlayed = true;
         }
 
@@ -142,7 +147,9 @@ public class FishingRod : UdonSharpBehaviour
 
     public void FinishCatch()
     {
-        _rewindingLineSound.Stop();
+        if (_rewindingLineSound != null)
+            _rewindingLineSound.Stop();
+
         _hasExtendingSoundPlayed = false;
         _hasRewindingSoundPlayed = false;
 
