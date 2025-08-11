@@ -78,7 +78,7 @@ public class FishingRod : UdonSharpBehaviour
         _isCasting = true;
         isRewinding = false;
         currentLineLength = 0f;
-        _castDirection = _rodTip.up;
+        _castDirection = _rodTip.right;
     }
 
     //5.
