@@ -33,12 +33,11 @@ public class HookAttractor : UdonSharpBehaviour
             }
 
         }
+        Debug.Log("AttractAsteroidHook");
     }
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log("Hook trigger detected: " + other.name);
-
         if (!_rod.isSecondTrigger || _rod.isRewinding || _rod.caughtAsteroid != null || _rod.currentLineLength < _rod.maxLineLength) return;
 
         // Check if the object is a valid asteroid
@@ -46,5 +45,6 @@ public class HookAttractor : UdonSharpBehaviour
         if (_asteroid == null) return;
 
         SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "AttractAsteroid");
+        Debug.Log("TriggerStayHook");
     }
 }

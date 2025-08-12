@@ -29,6 +29,7 @@ public class FishingRod : UdonSharpBehaviour
     private bool _isInitialCasting = true;
     private bool _hasExtendingSoundPlayed = false; //Has the sound for when the line is extending been played?
     private bool _hasRewindingSoundPlayed = false; //Has the sound for when the line is extending been played?
+    private bool _isHeld = false; //Is a player holding the fishing line?
 
     [Header("Sounds")]
     [SerializeField] private AudioSource _extendingLineSound; //Sound played while the fishing line is extending.
@@ -40,35 +41,43 @@ public class FishingRod : UdonSharpBehaviour
 
     void Update()
     {
-        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateLineRenderer");
+        if(_isHeld)
+        {
+            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateLineRenderer");
 
-        //2. 
-        if (!_isCasting && isSecondTrigger)
-        {
-            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "BeginCast");
-        }
+            //2. 
+            if (!_isCasting && isSecondTrigger)
+            {
+                SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "BeginCast");
+                Debug.Log("BeginCastUpdate");
+            }
 
-        //4.
-        if (_isCasting && !isRewinding && currentLineLength < maxLineLength)
-        {
-            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ExtendLine");
-        }
-        else if (currentLineLength >= maxLineLength)
-        {
-            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "WobbleHook");
-        }
+            //4.
+            if (_isCasting && !isRewinding && currentLineLength < maxLineLength)
+            {
+                SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ExtendLine");
+                Debug.Log("ExtendLineUpdate");
+            }
+            else if (currentLineLength >= maxLineLength)
+            {
+                SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "WobbleHook");
+                Debug.Log("WobbleHookUpdate");
+            }
 
-        //B.
-        if (_isCasting && !isSecondTrigger && !isRewinding)
-        {
-            _isCasting = false; // cancel cast if trigger released early
-            isRewinding = true;
-        }
+            //B.
+            if (_isCasting && !isSecondTrigger && !isRewinding)
+            {
+                _isCasting = false; // cancel cast if trigger released early
+                isRewinding = true;
+                Debug.Log("BUpdate");
+            }
 
-        //C.
-        if (isRewinding)
-        {
-            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "RewindLine");
+            //C.
+            if (isRewinding)
+            {
+                SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "RewindLine");
+                Debug.Log("CUpdate");
+            }
         }
     }
 
@@ -79,6 +88,7 @@ public class FishingRod : UdonSharpBehaviour
         isRewinding = false;
         currentLineLength = 0f;
         _castDirection = _rodTip.right;
+        Debug.Log("BeginCastInside");
     }
 
     //5.
@@ -102,6 +112,7 @@ public class FishingRod : UdonSharpBehaviour
 
             _hasExtendingSoundPlayed = true;
         }
+        Debug.Log("ExtendLineInside");
     }
 
     public void WobbleHook()
@@ -116,6 +127,7 @@ public class FishingRod : UdonSharpBehaviour
         ) * _wobblingAmplitude;
 
         _hook.position = _rodTip.position + _castDirection * currentLineLength + wobble;
+        Debug.Log("WobbleHookInside");
     }
 
     //D.
@@ -143,6 +155,7 @@ public class FishingRod : UdonSharpBehaviour
         {
             SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "FinishCatch");
         }
+        Debug.Log("RewindLineInside");
     }
 
     public void FinishCatch()
@@ -160,6 +173,7 @@ public class FishingRod : UdonSharpBehaviour
         }
 
         ResetLine();*/
+        Debug.Log("FinishCatchInside");
     }
 
     //Not used?
@@ -173,6 +187,7 @@ public class FishingRod : UdonSharpBehaviour
 
         _hasExtendingSoundPlayed = false;
         _hasRewindingSoundPlayed = false;
+        Debug.Log("ResetLineInside");
     }
 
     public void UpdateLineRenderer()
@@ -183,6 +198,7 @@ public class FishingRod : UdonSharpBehaviour
             lineRenderer.SetPosition(0, _rodTip.position);
             lineRenderer.SetPosition(1, _hook.position);
         }
+        Debug.Log("UpdateLineRendererInside");
     }
 
     public void CatchAsteroid(GameObject asteroidObj)
@@ -196,6 +212,7 @@ public class FishingRod : UdonSharpBehaviour
         asteroidObj.transform.SetParent(_hook);
         asteroidObj.transform.localPosition = Vector3.zero;
         asteroidObj.GetComponent<SphereCollider>().enabled = false;
+        Debug.Log("CatchAsteroidInside");
     }
 
     /*public void OnTriggerEnter(Collider other)
@@ -223,7 +240,17 @@ public class FishingRod : UdonSharpBehaviour
         {
             isSecondTrigger = false;
         }
-        
+        Debug.Log("OnPickUpUseDownInside");
+    }
+
+    public override void OnPickup()
+    {
+        _isHeld = true;
+    }
+
+    public override void OnDrop()
+    {
+        _isHeld = false;
     }
 
     /*//A. Trigger is released.
