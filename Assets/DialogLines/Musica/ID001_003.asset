@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c9497a9f49d5b48b5d2be35f78a04a, type: 3}
+  m_Name: ID001_003
+  m_EditorClassIdentifier: 
+  blocId: ID001
+  lineId: _003
+  speakerName: 0
+  lineFrench: "Dedans le chauffage ast\xE9roides !"
+  lineEnglish: "In the Heater astero\xEFds!"
