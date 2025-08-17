@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
+//Turns the scriptable objects for the dialog with the aliens into a format compatible with VRChat.
 public class DialogPostProcessScene : MonoBehaviour
 {
     [PostProcessScene(callbackOrder:-10)]
@@ -12,7 +13,7 @@ public class DialogPostProcessScene : MonoBehaviour
 
         Object[] rawLines = musica.dialogLines;
         DialogLine[] dialogLines = new DialogLine[rawLines.Length];
-        DialogLineVRC[] dialogLinesVRC = musica.dialogLinesVRC;
+        string[] lineFrench = musica.lineFrench;
 
         for (int i = 0; i < rawLines.Length; i++)
         {
@@ -21,11 +22,9 @@ public class DialogPostProcessScene : MonoBehaviour
             if (dialogLines[i] == null)
                 continue;
 
-            dialogLinesVRC[i].blocId = dialogLines[i].blocId;
-            dialogLinesVRC[i].lineId = dialogLines[i].lineId;
-            dialogLinesVRC[i].speakerName = dialogLines[i].speakerName;
-            dialogLinesVRC[i].lineFrench = dialogLines[i].lineFrench;
-            dialogLinesVRC[i].lineEnglish = dialogLines[i].lineEnglish;
+            lineFrench[i] = dialogLines[i].lineFrench;
         }
+
+        rawLines = null;
     }
 }
