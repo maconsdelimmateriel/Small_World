@@ -7,7 +7,7 @@ using TMPro;
 
 public class Alien : UdonSharpBehaviour
 {
-    [SerializeField] private UnityEngine.Object[] _dialogLines;
+    public UnityEngine.Object[] dialogLines;
     [SerializeField] private GameObject _canvas;
     [SerializeField] private TextMeshProUGUI _text;
 
