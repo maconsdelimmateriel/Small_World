@@ -14,6 +14,7 @@ public class DialogPostProcessScene : MonoBehaviour
         Object[] rawLines = musica.dialogLines;
         DialogLine[] dialogLines = new DialogLine[rawLines.Length];
         string[] lineFrench = musica.lineFrench;
+        string[] lineEnglish = musica.lineEnglish;
 
         for (int i = 0; i < rawLines.Length; i++)
         {
@@ -23,6 +24,7 @@ public class DialogPostProcessScene : MonoBehaviour
                 continue;
 
             lineFrench[i] = dialogLines[i].lineFrench;
+            lineEnglish[i] = dialogLines[i].lineEnglish;
         }
 
         rawLines = null;
