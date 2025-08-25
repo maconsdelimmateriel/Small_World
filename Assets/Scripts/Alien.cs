@@ -19,6 +19,10 @@ public class Alien : UdonSharpBehaviour
     private int _language = 0; //Language of the dialog 0: French, 1: English
     private int _indexDialog = 0; //Index of the current line of dialog displayed.
 
+    public int currentSeason = 0; //What season is currently on the asteroid? 
+
+    [SerializeField] private int[] _maxIndexDialog; //Maximum dialog index this alien can reach for each season.
+
     //Starts the dialog.
     public void StartDialog()
     {
@@ -35,7 +39,27 @@ public class Alien : UdonSharpBehaviour
     //Progresses to the next line of dialog.
     public void NextDialog()
     {
+        string textToDisplay = "";
 
+        if(/*Condition for next line*/ true)
+        {
+            _indexDialog++;
+        }
+        else
+        {
+            _indexDialog = 0;
+        }
+
+        if (_language == 0)
+        {
+            textToDisplay = lineEnglish[_indexDialog];
+        }
+        else if (_language == 1)
+        {
+            textToDisplay = lineFrench[_indexDialog];
+        }
+
+        _text.text = textToDisplay;
     }
 
     //Launched when the Close button is cliked.
