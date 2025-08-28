@@ -15,5 +15,6 @@ MonoBehaviour:
   blocId: ID003
   lineId: _003
   speakerName: 0
+  season: 2
   lineFrench: Manquer moi 41 Lyncis, parler elle meilleur que moi !
   lineEnglish: Missing me 41Lyncis, talk them better than me!

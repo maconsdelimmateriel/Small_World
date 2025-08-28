@@ -15,5 +15,6 @@ MonoBehaviour:
   blocId: ID003
   lineId: _005
   speakerName: 0
+  season: 2
   lineFrench: "HAT-P-21... Mazaalai! Avait HAT-P-21 plus grosse canne \xE0 p\xEAche!"
   lineEnglish: HAT-P-21... Mazaalai! Got HAT-P-21 bigger fishing rod!

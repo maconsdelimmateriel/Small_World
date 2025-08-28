@@ -15,5 +15,6 @@ MonoBehaviour:
   blocId: ID002
   lineId: _001
   speakerName: 0
+  season: 2
   lineFrench: "R\xE9ussi! Tu as! R\xE9ussi!"
   lineEnglish: Did it! You! Did it!
