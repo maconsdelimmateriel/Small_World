@@ -23,8 +23,8 @@ public class DialogPostProcessScene : MonoBehaviour
             if (dialogLines[i] == null)
                 continue;
 
-            lineFrench[i] = dialogLines[i].lineFrench;
-            lineEnglish[i] = dialogLines[i].lineEnglish;
+            //lineFrench[i] = dialogLines[i].lineFrench;
+            //lineEnglish[i] = dialogLines[i].lineEnglish;
         }
 
         rawLines = null;
