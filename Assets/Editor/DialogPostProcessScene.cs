@@ -1,32 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-//Turns the scriptable objects for the dialog with the aliens into a format compatible with VRChat.
 public class DialogPostProcessScene : MonoBehaviour
 {
-    [PostProcessScene(callbackOrder:-10)]
+    [PostProcessScene(callbackOrder: -10)]
     public static void OnPostProcessScene()
     {
         Alien musica = FindObjectOfType<Alien>();
+        if (musica == null) return;
 
         Object[] rawLines = musica.dialogLines;
-        DialogLine[] dialogLines = new DialogLine[rawLines.Length];
-        string[] lineFrench = musica.lineFrench;
-        string[] lineEnglish = musica.lineEnglish;
+        if (rawLines == null || rawLines.Length == 0) return;
+
+        musica.lineFrench = new string[rawLines.Length];
+        musica.lineEnglish = new string[rawLines.Length];
+        musica.season = new string[rawLines.Length];
 
         for (int i = 0; i < rawLines.Length; i++)
         {
-            dialogLines[i] = (DialogLine)rawLines[i];
+            DialogLine dl = rawLines[i] as DialogLine;
+            if (dl == null) continue;
 
-            if (dialogLines[i] == null)
-                continue;
-
-            //lineFrench[i] = dialogLines[i].lineFrench;
-            //lineEnglish[i] = dialogLines[i].lineEnglish;
+            musica.lineFrench[i] = dl.lineFrench;
+            musica.lineEnglish[i] = dl.lineEnglish;
+            musica.season[i] = dl.season.ToString();
         }
 
-        rawLines = null;
+        // Clear ScriptableObject refs before build
+        musica.dialogLines = null;
     }
 }
