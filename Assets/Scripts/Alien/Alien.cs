@@ -133,6 +133,31 @@ public class Alien : UdonSharpBehaviour
             _text.text = lineFrench[_indexDialog];
             _language = 0;
         }
+
+        NextDialog();
+    }
+    
+    //Launched when the next season button is clicked.
+    public void OnClickSeason()
+    {
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "TestNextSeason");
+    }
+
+    //A test method to change season immediately.
+    public void TestNextSeason()
+    {
+        if(currentSeason == "Winter")
+        {
+            currentSeason = "Spring";
+        }
+        else if (currentSeason == "Spring")
+        {
+            currentSeason = "Summer";
+        }
+        else
+        {
+            currentSeason = "Winter";
+        }
     }
 
     public override void OnPlayerTriggerEnter(VRCPlayerApi player)
