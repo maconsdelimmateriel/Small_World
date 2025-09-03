@@ -442,6 +442,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: Close
       objectReference: {fileID: 0}
+    - target: {fileID: 2137251203735842853, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
+    - target: {fileID: 2282350694528846944, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     - target: {fileID: 2805266402224062158, guid: b1faec3ecfb5c574fa9ebfc2def76640,
         type: 3}
       propertyPath: m_Name
@@ -467,6 +477,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6121540181767844561, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     - target: {fileID: 8341295826867744164, guid: b1faec3ecfb5c574fa9ebfc2def76640,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -502,6 +517,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -1.85
       objectReference: {fileID: 0}
+    - target: {fileID: 9210928135147221041, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1063,7 +1083,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1548,6 +1568,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: (Test) Next Season
       objectReference: {fileID: 0}
+    - target: {fileID: 2137251203735842853, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
+    - target: {fileID: 2282350694528846944, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     - target: {fileID: 2805266402224062158, guid: b1faec3ecfb5c574fa9ebfc2def76640,
         type: 3}
       propertyPath: m_Name
@@ -1573,6 +1603,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6121540181767844561, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     - target: {fileID: 8341295826867744164, guid: b1faec3ecfb5c574fa9ebfc2def76640,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -1608,6 +1643,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -1.85
       objectReference: {fileID: 0}
+    - target: {fileID: 9210928135147221041, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2715,7 +2755,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -4190,6 +4230,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: Next
       objectReference: {fileID: 0}
+    - target: {fileID: 2137251203735842853, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
+    - target: {fileID: 2282350694528846944, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     - target: {fileID: 2805266402224062158, guid: b1faec3ecfb5c574fa9ebfc2def76640,
         type: 3}
       propertyPath: m_Name
@@ -4215,6 +4265,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6121540181767844561, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     - target: {fileID: 8341295826867744164, guid: b1faec3ecfb5c574fa9ebfc2def76640,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -4250,6 +4305,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -1.85
       objectReference: {fileID: 0}
+    - target: {fileID: 9210928135147221041, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5093,7 +5153,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -6549,6 +6609,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: Translate
       objectReference: {fileID: 0}
+    - target: {fileID: 2137251203735842853, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
+    - target: {fileID: 2282350694528846944, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     - target: {fileID: 2805266402224062158, guid: b1faec3ecfb5c574fa9ebfc2def76640,
         type: 3}
       propertyPath: m_Name
@@ -6574,6 +6644,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6121540181767844561, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     - target: {fileID: 8341295826867744164, guid: b1faec3ecfb5c574fa9ebfc2def76640,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -6609,6 +6684,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -1.85
       objectReference: {fileID: 0}
+    - target: {fileID: 9210928135147221041, guid: b1faec3ecfb5c574fa9ebfc2def76640,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 35630e38b4e5ffb40b44ec5348b4333f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7278,7 +7358,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -9355,7 +9435,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -10540,7 +10620,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
