@@ -703,6 +703,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 184315123}
   isSecondTrigger: 0
   isRewinding: 0
+  hasBeenPicked: 0
   _extendingLineSound: {fileID: 184315122}
   _rewindingLineSound: {fileID: 184315121}
   caughtAsteroid: {fileID: 0}
@@ -1800,7 +1801,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 200
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &406517332
 MonoBehaviour:
@@ -2372,6 +2373,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 483846065}
   isSecondTrigger: 0
   isRewinding: 0
+  hasBeenPicked: 0
   _extendingLineSound: {fileID: 483846070}
   _rewindingLineSound: {fileID: 483846071}
   caughtAsteroid: {fileID: 0}
@@ -3610,6 +3612,7 @@ MonoBehaviour:
   - {fileID: 1646086226}
   - {fileID: 1023325636}
   - {fileID: 1244147419}
+  _fishingRods: []
   activationInterval: 20
 --- !u!1001 &966486495
 PrefabInstance:
@@ -3935,7 +3938,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 200
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1012939635
 MonoBehaviour:
@@ -5217,6 +5220,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 1261061205}
   isSecondTrigger: 0
   isRewinding: 0
+  hasBeenPicked: 0
   _extendingLineSound: {fileID: 1261061211}
   _rewindingLineSound: {fileID: 1261061210}
   caughtAsteroid: {fileID: 0}
@@ -6025,7 +6029,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 200
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1387742214
 MonoBehaviour:
@@ -6978,6 +6982,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 1611454894}
   isSecondTrigger: 0
   isRewinding: 0
+  hasBeenPicked: 0
   _extendingLineSound: {fileID: 1611454893}
   _rewindingLineSound: {fileID: 1611454892}
   caughtAsteroid: {fileID: 0}
@@ -7542,7 +7547,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 200
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1644412648
 MonoBehaviour:
@@ -8485,7 +8490,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 200
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1757472108
 MonoBehaviour:
@@ -9055,6 +9060,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 1778349437}
   isSecondTrigger: 0
   isRewinding: 0
+  hasBeenPicked: 0
   _extendingLineSound: {fileID: 1778349436}
   _rewindingLineSound: {fileID: 1778349435}
   caughtAsteroid: {fileID: 0}
@@ -10240,6 +10246,7 @@ MonoBehaviour:
   lineRenderer: {fileID: 2000594560}
   isSecondTrigger: 0
   isRewinding: 0
+  hasBeenPicked: 0
   _extendingLineSound: {fileID: 2000594559}
   _rewindingLineSound: {fileID: 2000594558}
   caughtAsteroid: {fileID: 0}

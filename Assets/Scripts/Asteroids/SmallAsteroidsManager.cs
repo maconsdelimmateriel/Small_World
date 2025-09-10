@@ -7,10 +7,8 @@ using System.Collections.Generic;
 
 public class SmallAsteroidsManager : UdonSharpBehaviour
 {
-    [Header("Manually Assigned Asteroids (Disabled in Scene)")]
     [SerializeField] private GameObject[] _asteroidPool; //All the small asteroids.
 
-    [Header("Activation Settings")]
     public float activationInterval = 1f; //Interval at which a new small asteroid appears.
 
     private float _timer;
