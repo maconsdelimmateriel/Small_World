@@ -158,6 +158,8 @@ public class Alien : UdonSharpBehaviour
         {
             currentSeason = "Winter";
         }
+
+        StartDialog();
     }
 
     public override void OnPlayerTriggerEnter(VRCPlayerApi player)
