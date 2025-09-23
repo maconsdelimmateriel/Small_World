@@ -246,6 +246,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1261061212}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d8f8944811f37a4783137ea1463afd9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1261061213}
   m_SourcePrefab: {fileID: 100100000, guid: 6d8f8944811f37a4783137ea1463afd9, type: 3}
 --- !u!1 &137470667
 GameObject:
@@ -656,6 +660,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 184315130}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d8f8944811f37a4783137ea1463afd9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 184315131}
   m_SourcePrefab: {fileID: 100100000, guid: 6d8f8944811f37a4783137ea1463afd9, type: 3}
 --- !u!4 &184315118 stripped
 Transform:
@@ -1128,6 +1136,20 @@ MonoBehaviour:
   VolumetricRadius: 0
   EnableSpatialization: 0
   UseAudioSourceVolumeCurve: 0
+--- !u!114 &184315131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184315119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1783056023, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllowCollisionOwnershipTransfer: 1
+  ForceKinematicOnRemote: 0
 --- !u!1 &236872371
 GameObject:
   m_ObjectHideFlags: 0
@@ -5589,6 +5611,20 @@ MonoBehaviour:
   VolumetricRadius: 0
   EnableSpatialization: 0
   UseAudioSourceVolumeCurve: 0
+--- !u!114 &1261061213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261061200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1783056023, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllowCollisionOwnershipTransfer: 1
+  ForceKinematicOnRemote: 0
 --- !u!1 &1264759057
 GameObject:
   m_ObjectHideFlags: 0
@@ -6931,6 +6967,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1611454901}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d8f8944811f37a4783137ea1463afd9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1611454902}
   m_SourcePrefab: {fileID: 100100000, guid: 6d8f8944811f37a4783137ea1463afd9, type: 3}
 --- !u!4 &1611454889 stripped
 Transform:
@@ -7403,6 +7443,20 @@ MonoBehaviour:
   VolumetricRadius: 0
   EnableSpatialization: 0
   UseAudioSourceVolumeCurve: 0
+--- !u!114 &1611454902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611454890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1783056023, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllowCollisionOwnershipTransfer: 1
+  ForceKinematicOnRemote: 0
 --- !u!1001 &1644412644
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9008,6 +9062,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1778349444}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d8f8944811f37a4783137ea1463afd9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1778349445}
   m_SourcePrefab: {fileID: 100100000, guid: 6d8f8944811f37a4783137ea1463afd9, type: 3}
 --- !u!4 &1778349432 stripped
 Transform:
@@ -9480,6 +9538,20 @@ MonoBehaviour:
   VolumetricRadius: 0
   EnableSpatialization: 0
   UseAudioSourceVolumeCurve: 0
+--- !u!114 &1778349445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778349433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1783056023, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllowCollisionOwnershipTransfer: 1
+  ForceKinematicOnRemote: 0
 --- !u!1 &1787983409
 GameObject:
   m_ObjectHideFlags: 0
@@ -10193,6 +10265,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2000594567}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6d8f8944811f37a4783137ea1463afd9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2000594568}
   m_SourcePrefab: {fileID: 100100000, guid: 6d8f8944811f37a4783137ea1463afd9, type: 3}
 --- !u!4 &2000594555 stripped
 Transform:
@@ -10665,6 +10741,20 @@ MonoBehaviour:
   VolumetricRadius: 0
   EnableSpatialization: 0
   UseAudioSourceVolumeCurve: 0
+--- !u!114 &2000594568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000594556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1783056023, guid: 661092b4961be7145bfbe56e1e62337b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllowCollisionOwnershipTransfer: 1
+  ForceKinematicOnRemote: 0
 --- !u!1001 &2009549049
 PrefabInstance:
   m_ObjectHideFlags: 0
