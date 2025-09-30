@@ -1,10 +1,8 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
-//Script attached to the basic small asteroid.
 public class SmallAsteroid : UdonSharpBehaviour
 {
     [Header("Orbit Center")]
@@ -15,69 +13,77 @@ public class SmallAsteroid : UdonSharpBehaviour
     [UdonSynced] public float semiMinorAxis = 3f;
 
     [Header("Orbit Speed")]
-    [UdonSynced] public float baseOrbitSpeed = 1f;
-    [UdonSynced] public bool randomizeSpeed = true;
-    [UdonSynced] public float minSpeed = 0.5f;
-    [UdonSynced] public float maxSpeed = 2f;
+    [UdonSynced] public float orbitSpeed = 1f;
 
     [Header("Orbit Inclination (Rotation in Degrees)")]
-    [UdonSynced] public Vector3 orbitTiltEuler = new Vector3(0f, 0f, 0f); // X, Y, Z tilt
+    [UdonSynced] public Vector3 orbitTiltEuler = Vector3.zero;
 
     [Header("Start Angle")]
     [UdonSynced] public float startAngle = 0f;
-    [UdonSynced] public bool randomizeStartAngle = true;
-
-    [UdonSynced] private float angle;
-    [UdonSynced] private float orbitSpeed; // final speed used
 
     [UdonSynced] public bool isCaught = false;
 
-    [UdonSynced] private Vector3 _position = new Vector3(0f, 0f, 0f);
-
-    public override void OnPlayerJoined(VRCPlayerApi player)
-    {
-        if (Networking.IsOwner(gameObject))
-        {
-            RequestSerialization(); // Push latest state to late joiner
-        }
-    }
-
-    public override void OnDeserialization()
-    {
-        transform.position = _position;
-    }
+    // Sync orbit start time (ms since world start)
+    [UdonSynced] private double spawnServerTime;
 
     void OnEnable()
     {
-        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "GenerateOrbit");
+        if (Networking.IsOwner(gameObject))
+        {
+            // Record the time this asteroid was activated
+            spawnServerTime = Networking.GetServerTimeInMilliseconds();
+            RequestSerialization();
+        }
     }
 
     void Update()
     {
         if (orbitCenter == null || isCaught) return;
 
-        // Advance angle over time
-        angle += orbitSpeed * Time.deltaTime;
-        angle %= Mathf.PI * 2f;
+        // Calculate elapsed time since activation (in seconds)
+        double currentTime = Networking.GetServerTimeInMilliseconds();
+        double elapsed = (currentTime - spawnServerTime) / 1000.0;
 
-        // Compute position on ellipse
+        // Angle progresses deterministically based on server time
+        float angle = startAngle + (float)(orbitSpeed * elapsed);
+
+        // Orbit position on ellipse
         float x = semiMajorAxis * Mathf.Cos(angle);
         float z = semiMinorAxis * Mathf.Sin(angle);
         Vector3 localPos = new Vector3(x, 0f, z);
 
-        // Apply 3D rotation (orbit inclination)
+        // Apply tilt
         Quaternion tiltRotation = Quaternion.Euler(orbitTiltEuler);
         Vector3 rotatedPos = tiltRotation * localPos;
 
-        // Final world position
+        // Final position
         transform.position = orbitCenter.position + rotatedPos;
-        _position = transform.position;
     }
 
     public void GenerateOrbit()
     {
-        angle = randomizeStartAngle ? Random.Range(0f, Mathf.PI * 2f) : startAngle;
-        orbitSpeed = randomizeSpeed ? Random.Range(minSpeed, maxSpeed) : baseOrbitSpeed;
+        if (!Networking.IsOwner(gameObject)) return;
+
+        orbitSpeed = Random.Range(0.01f, 0.2f);
+        startAngle = Random.Range(0f, Mathf.PI * 2f);
+        orbitTiltEuler = new Vector3(
+            Random.Range(-30f, 30f),
+            Random.Range(0f, 360f),
+            0f
+        );
+
+        // Update spawn time whenever we regenerate orbit
+        spawnServerTime = Networking.GetServerTimeInMilliseconds();
+        RequestSerialization();
+    }
+
+    public override void OnDeserialization()
+    {
+        // Late joiners now get:
+        // - orbitSpeed
+        // - startAngle
+        // - orbitTiltEuler
+        // - spawnServerTime
+        // And calculate the correct orbit instantly
     }
 }
-
