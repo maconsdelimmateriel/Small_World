@@ -13,6 +13,28 @@ public class SmallAsteroidsManager : UdonSharpBehaviour
 
     private float _timer;
 
+    //Used to resynch asteroids already activated before player joins?
+    /*[UdonSynced] [SerializeField] private bool[] _randomizeStartAngle;
+    [UdonSynced] [SerializeField] private bool[] _randomizeSpeed;
+    [UdonSynced] [SerializeField] private Vector3[] _orbitTiltEuler;*/
+    [UdonSynced] private int _indexAsteroidActive = 0;
+
+    public override void OnPlayerJoined(VRCPlayerApi player)
+    {
+        if (Networking.IsOwner(gameObject))
+        {
+            RequestSerialization(); // Push latest state to late joiner
+        }
+    }
+
+    public override void OnDeserialization()
+    {
+        for (int i=0; i<_indexAsteroidActive; i++)
+        {
+            _asteroidPool[i].SetActive(true);
+        }
+    }
+
     void Update()
     {
         _timer += Time.deltaTime;
@@ -35,15 +57,20 @@ public class SmallAsteroidsManager : UdonSharpBehaviour
                 if (orbit != null)
                 {
                     orbit.randomizeStartAngle = true;
+
                     orbit.randomizeSpeed = true;
+
                     orbit.orbitTiltEuler = new Vector3(
                         Random.Range(-30f, 30f),
                         Random.Range(0f, 360f),
                         0f
                     );
+
                 }
 
                 asteroid.SetActive(true);
+
+                _indexAsteroidActive++;
                 break;
             }
         }

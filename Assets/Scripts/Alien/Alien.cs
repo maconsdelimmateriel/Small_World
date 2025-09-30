@@ -24,10 +24,26 @@ public class Alien : UdonSharpBehaviour
 
     [SerializeField] private int[] _maxIndexDialog; //Maximum dialog index this alien can reach for each season.
 
+    [UdonSynced] private bool _isCanvasActive = false;
+
+    public override void OnPlayerJoined(VRCPlayerApi player)
+    {
+        if (Networking.IsOwner(gameObject))
+        {
+            RequestSerialization(); // Push latest state to late joiner
+        }
+    }
+
+    public override void OnDeserialization()
+    {
+        _canvas.SetActive(_isCanvasActive);
+    }
+
     //Starts the dialog.
     public void StartDialog()
     {
-        _canvas.SetActive(true);
+        _isCanvasActive = true;
+        _canvas.SetActive(_isCanvasActive);
 
         // Find the first line for this season using a simple loop
         int firstIndex = -1;
@@ -49,6 +65,7 @@ public class Alien : UdonSharpBehaviour
 
         _indexDialog = 0; // Index within season
         DisplayLine(firstIndex); // Show the first line
+        RequestSerialization();
     }
 
     //Launched when button Next is clicked.
@@ -111,7 +128,9 @@ public class Alien : UdonSharpBehaviour
     //Ends the dialog.
     public void CloseDialog()
     {
-        _canvas.SetActive(false);
+        _isCanvasActive = false;
+        _canvas.SetActive(_isCanvasActive);
+        RequestSerialization();
     }
 
     //Launched when the translate button is clicked.

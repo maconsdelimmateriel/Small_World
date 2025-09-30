@@ -11,26 +11,41 @@ public class SmallAsteroid : UdonSharpBehaviour
     public Transform orbitCenter;
 
     [Header("Orbit Shape")]
-    public float semiMajorAxis = 5f;
-    public float semiMinorAxis = 3f;
+    [UdonSynced] public float semiMajorAxis = 5f;
+    [UdonSynced] public float semiMinorAxis = 3f;
 
     [Header("Orbit Speed")]
-    public float baseOrbitSpeed = 1f;
-    public bool randomizeSpeed = true;
-    public float minSpeed = 0.5f;
-    public float maxSpeed = 2f;
+    [UdonSynced] public float baseOrbitSpeed = 1f;
+    [UdonSynced] public bool randomizeSpeed = true;
+    [UdonSynced] public float minSpeed = 0.5f;
+    [UdonSynced] public float maxSpeed = 2f;
 
     [Header("Orbit Inclination (Rotation in Degrees)")]
-    public Vector3 orbitTiltEuler = new Vector3(0f, 0f, 0f); // X, Y, Z tilt
+    [UdonSynced] public Vector3 orbitTiltEuler = new Vector3(0f, 0f, 0f); // X, Y, Z tilt
 
     [Header("Start Angle")]
-    public float startAngle = 0f;
-    public bool randomizeStartAngle = true;
+    [UdonSynced] public float startAngle = 0f;
+    [UdonSynced] public bool randomizeStartAngle = true;
 
-    private float angle;
-    private float orbitSpeed; // final speed used
+    [UdonSynced] private float angle;
+    [UdonSynced] private float orbitSpeed; // final speed used
 
-    public bool isCaught = false;
+    [UdonSynced] public bool isCaught = false;
+
+    [UdonSynced] private Vector3 _position = new Vector3(0f, 0f, 0f);
+
+    public override void OnPlayerJoined(VRCPlayerApi player)
+    {
+        if (Networking.IsOwner(gameObject))
+        {
+            RequestSerialization(); // Push latest state to late joiner
+        }
+    }
+
+    public override void OnDeserialization()
+    {
+        transform.position = _position;
+    }
 
     void OnEnable()
     {
@@ -56,6 +71,7 @@ public class SmallAsteroid : UdonSharpBehaviour
 
         // Final world position
         transform.position = orbitCenter.position + rotatedPos;
+        _position = transform.position;
     }
 
     public void GenerateOrbit()
