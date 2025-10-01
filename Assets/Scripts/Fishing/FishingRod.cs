@@ -22,14 +22,14 @@ public class FishingRod : UdonSharpBehaviour
     [SerializeField] private LineRenderer lineRenderer; //Component that generates the fishing line.
 
     [Header("Booleans")]
-    public bool isSecondTrigger = false; //Has the trigger already been pulled once?
-    private bool _rewindPressed = false; //Should the line rewind?
-    public bool isRewinding = false; //Is the line being rewinded?
-    private bool _isCasting = false; //Is the fishing rod in use?
-    private bool _isInitialCasting = true;
-    private bool _hasExtendingSoundPlayed = false; //Has the sound for when the line is extending been played?
-    private bool _hasRewindingSoundPlayed = false; //Has the sound for when the line is extending been played?
-    private bool _isHeld = false; //Is a player holding the fishing line?
+    [UdonSynced] public bool isSecondTrigger = false; //Has the trigger already been pulled once?
+    [UdonSynced] private bool _rewindPressed = false; //Should the line rewind?
+    [UdonSynced] public bool isRewinding = false; //Is the line being rewinded?
+    [UdonSynced] private bool _isCasting = false; //Is the fishing rod in use?
+    [UdonSynced] private bool _isInitialCasting = true;
+    [UdonSynced] private bool _hasExtendingSoundPlayed = false; //Has the sound for when the line is extending been played?
+    [UdonSynced] private bool _hasRewindingSoundPlayed = false; //Has the sound for when the line is extending been played?
+    [UdonSynced] private bool _isHeld = false; //Is a player holding the fishing line?
 
     [Header("Sounds")]
     [SerializeField] private AudioSource _extendingLineSound; //Sound played while the fishing line is extending.
@@ -41,10 +41,16 @@ public class FishingRod : UdonSharpBehaviour
 
     void Update()
     {
-        if(_isHeld)
+        if (currentLineLength >= maxLineLength)
+        {
+            WobbleHook();
+        }
+
+        if (_isHeld)
         {
             _hook.rotation = _rodTip.rotation;
-            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateLineRenderer");
+            //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateLineRenderer");
+            UpdateLineRenderer();
 
             //2. 
             if (!_isCasting && isSecondTrigger)
@@ -55,24 +61,28 @@ public class FishingRod : UdonSharpBehaviour
             //4.
             if (_isCasting && !isRewinding && currentLineLength < maxLineLength)
             {
-                SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ExtendLine");
-            }
-            else if (currentLineLength >= maxLineLength)
-            {
-                SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "WobbleHook");
+                //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ExtendLine");
+                ExtendLine();
             }
 
+            /*else if (currentLineLength >= maxLineLength)
+            {
+                //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "WobbleHook");
+                WobbleHook();
+            }
+            
             //B.
             if (_isCasting && !isSecondTrigger && !isRewinding)
             {
                 _isCasting = false; // cancel cast if trigger released early
                 isRewinding = true;
-            }
+            }*/
 
             //C.
             if (isRewinding)
             {
-                SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "RewindLine");
+                //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "RewindLine");
+                RewindLine();
             }
         }
     }
@@ -84,6 +94,7 @@ public class FishingRod : UdonSharpBehaviour
         isRewinding = false;
         currentLineLength = 0f;
         _castDirection = _rodTip.right;
+        RequestSerialization();
     }
 
     //5.
@@ -162,9 +173,9 @@ public class FishingRod : UdonSharpBehaviour
         {
             caughtAsteroid.SetActive(false); // Or notify game logic to convert to fuel
             caughtAsteroid = null;
-        }
+        }*/
 
-        ResetLine();*/
+        ResetLine();
     }
 
     //Not used?
@@ -226,18 +237,23 @@ public class FishingRod : UdonSharpBehaviour
         }
         else
         {
+            isRewinding = true;
             isSecondTrigger = false;
         }
+
+        RequestSerialization();
     }
 
     public override void OnPickup()
     {
         _isHeld = true;
+        RequestSerialization();
     }
 
     public override void OnDrop()
     {
         _isHeld = false;
+        RequestSerialization();
     }
 
     /*//A. Trigger is released.
