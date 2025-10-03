@@ -41,6 +41,7 @@ public class FishingRod : UdonSharpBehaviour
 
     void Update()
     {
+        UpdateLineRenderer();
         if (currentLineLength >= maxLineLength)
         {
             WobbleHook();
@@ -50,7 +51,6 @@ public class FishingRod : UdonSharpBehaviour
         {
             _hook.rotation = _rodTip.rotation;
             //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateLineRenderer");
-            UpdateLineRenderer();
 
             //2. 
             if (!_isCasting && isSecondTrigger)
