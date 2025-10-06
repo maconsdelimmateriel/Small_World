@@ -41,12 +41,12 @@ public class HookAttractor : UdonSharpBehaviour
         if (!_rod.isSecondTrigger || _rod.isRewinding || _rod.caughtAsteroid != null || _rod.currentLineLength < _rod.maxLineLength) return;
 
         SmallAsteroid hookedAsteroid = other.GetComponent<SmallAsteroid>();
-        if (hookedAsteroid == null || (hookedAsteroid != _asteroid && _asteroid == null)) return;
+        if (hookedAsteroid == null || (hookedAsteroid != _asteroid && _asteroid != null)) return;
 
         // Check if the object is a valid asteroid
         _asteroid = other.GetComponent<SmallAsteroid>();
  
         SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "AttractAsteroid");
-        Debug.Log("TriggerStayHook");
+        
     }
 }
