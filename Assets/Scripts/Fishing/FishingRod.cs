@@ -208,10 +208,10 @@ public class FishingRod : UdonSharpBehaviour
         isRewinding = false;
         //rewindPressed = true;
 
-        // Optional: stick asteroid to hook
+        //Stick asteroid to hook
         asteroidObj.transform.SetParent(_hook);
-        asteroidObj.transform.localPosition = Vector3.zero;
-        asteroidObj.GetComponent<SphereCollider>().enabled = false;
+        //asteroidObj.transform.localPosition = Vector3.zero;
+        //asteroidObj.GetComponent<SphereCollider>().enabled = false;
     }
 
     /*public void OnTriggerEnter(Collider other)
