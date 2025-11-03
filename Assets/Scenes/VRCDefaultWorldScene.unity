@@ -3260,7 +3260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1 &894121375
 GameObject:
   m_ObjectHideFlags: 0
@@ -3963,7 +3963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1 &1012939630 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 63c92943eb691324e8c49d2945a90e71,
@@ -4570,7 +4570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1 &1069902874
 GameObject:
   m_ObjectHideFlags: 0
@@ -5095,7 +5095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1001 &1248728296
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6616,7 +6616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1001 &1511622554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8050,7 +8050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1001 &1657593976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8358,7 +8358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1 &1688228147 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6950988298409066328, guid: ee03fba435bba7548927233bfb5ae67e,
@@ -8546,7 +8546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1001 &1757472104
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10314,7 +10314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1001 &2000594554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11411,7 +11411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AllowCollisionOwnershipTransfer: 1
-  ForceKinematicOnRemote: 0
+  ForceKinematicOnRemote: 1
 --- !u!1 &2121757798 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2805266402224062158, guid: b1faec3ecfb5c574fa9ebfc2def76640,
