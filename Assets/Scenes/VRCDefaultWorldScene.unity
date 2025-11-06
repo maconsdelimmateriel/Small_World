@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 98740415e46103c4da3ab7bb864ab17d, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.006065217, g: 0.0029310875, b: 0.029619321, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -702,8 +702,8 @@ MonoBehaviour:
   maxLineLength: 15
   _extendingSpeed: 5
   _rewindSpeed: 5
-  _wobblingSpeed: 0.5
-  _wobblingAmplitude: 1
+  _wobblingSpeed: 0.2
+  _wobblingAmplitude: 5
   _arcHeight: 1.5
   currentLineLength: 0
   _rodTip: {fileID: 1110063716}
@@ -5306,8 +5306,8 @@ MonoBehaviour:
   maxLineLength: 15
   _extendingSpeed: 5
   _rewindSpeed: 5
-  _wobblingSpeed: 0.5
-  _wobblingAmplitude: 1
+  _wobblingSpeed: 0.2
+  _wobblingAmplitude: 5
   _arcHeight: 1.5
   currentLineLength: 0
   _rodTip: {fileID: 2033682236}
@@ -7109,8 +7109,8 @@ MonoBehaviour:
   maxLineLength: 15
   _extendingSpeed: 5
   _rewindSpeed: 5
-  _wobblingSpeed: 0.5
-  _wobblingAmplitude: 1
+  _wobblingSpeed: 0.2
+  _wobblingAmplitude: 5
   _arcHeight: 1.5
   currentLineLength: 0
   _rodTip: {fileID: 2125035492}
@@ -9261,8 +9261,8 @@ MonoBehaviour:
   maxLineLength: 15
   _extendingSpeed: 5
   _rewindSpeed: 5
-  _wobblingSpeed: 0.5
-  _wobblingAmplitude: 1
+  _wobblingSpeed: 0.2
+  _wobblingAmplitude: 5
   _arcHeight: 1.5
   currentLineLength: 0
   _rodTip: {fileID: 1186570640}
@@ -10478,8 +10478,8 @@ MonoBehaviour:
   maxLineLength: 15
   _extendingSpeed: 5
   _rewindSpeed: 5
-  _wobblingSpeed: 0.5
-  _wobblingAmplitude: 1
+  _wobblingSpeed: 0.2
+  _wobblingAmplitude: 5
   _arcHeight: 1.5
   currentLineLength: 0
   _rodTip: {fileID: 1073056806}
@@ -11076,9 +11076,9 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8e3914f5bfa64f543b38a6fc4fa63df7, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
