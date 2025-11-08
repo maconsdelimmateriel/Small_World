@@ -116,6 +116,9 @@ public class FishingRod : UdonSharpBehaviour
             if(_extendingLineSound != null)
                 _extendingLineSound.Play();
 
+            if (_rewindingLineSound != null)
+                _rewindingLineSound.Stop();
+
             _hasExtendingSoundPlayed = true;
         }
     }
@@ -146,6 +149,9 @@ public class FishingRod : UdonSharpBehaviour
         {
             if (_rewindingLineSound != null)
                 _rewindingLineSound.Play();
+
+            if (_extendingLineSound != null)
+                _extendingLineSound.Stop();
 
             _hasRewindingSoundPlayed = true;
         }
