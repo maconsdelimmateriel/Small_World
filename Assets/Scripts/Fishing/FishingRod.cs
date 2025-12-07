@@ -37,6 +37,8 @@ public class FishingRod : UdonSharpBehaviour
 
     private Vector3 _castDirection; //Direction at which the fishing line is casted.
     public GameObject caughtAsteroid; //The asteroid that is currently hooked.
+    [SerializeField]
+    private GameObject _asteroidFuelPrefab; //Prefab of the asteroid that will be used as fuel.
 
 
     void Update()
@@ -175,11 +177,11 @@ public class FishingRod : UdonSharpBehaviour
         _hasExtendingSoundPlayed = false;
         _hasRewindingSoundPlayed = false;
 
-        /*if (caughtAsteroid != null)
+        if (caughtAsteroid != null)
         {
-            caughtAsteroid.SetActive(false); // Or notify game logic to convert to fuel
-            caughtAsteroid = null;
-        }*/
+            GameObject asteroidFuelPrefab = (GameObject)Instantiate(_asteroidFuelPrefab, caughtAsteroid.transform.position, caughtAsteroid.transform.rotation);
+            Destroy(caughtAsteroid);
+        }
 
         ResetLine();
     }
