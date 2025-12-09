@@ -183,10 +183,10 @@ public class FishingRod : UdonSharpBehaviour
             Destroy(caughtAsteroid);
         }
 
-        ResetLine();
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ResetLine");
     }
 
-    //Not used?
+    //Resets the line after catching an asteroid so it can catch again.
     public void ResetLine()
     {
         _isCasting = false;
@@ -197,6 +197,8 @@ public class FishingRod : UdonSharpBehaviour
 
         _hasExtendingSoundPlayed = false;
         _hasRewindingSoundPlayed = false;
+
+        _hook.gameObject.GetComponent<HookAttractor>().hasCaughtSoundPlayed = false;
     }
 
     public void UpdateLineRenderer()

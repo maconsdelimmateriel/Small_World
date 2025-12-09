@@ -10,7 +10,7 @@ public class HookAttractor : UdonSharpBehaviour
     [SerializeField] private float _magneticPullStrength = 5f; //Strength at which an asteroid is pulled toward the hook.
     [SerializeField] private AudioSource _catchingAsteroidSound; //Sound played when an asteroid is caught by the hook.
     private SmallAsteroid _asteroid; //The asteroid caught by the hook.
-    private bool _hasCaughtSoundPlayed = false; //Has the sound for when the asteroid has been caught been played?
+    public bool hasCaughtSoundPlayed = false; //Has the sound for when the asteroid has been caught been played?
 
     public void AttractAsteroid()
     {
@@ -26,14 +26,13 @@ public class HookAttractor : UdonSharpBehaviour
         {
             _rod.CatchAsteroid(_asteroid.gameObject);
 
-            if(!_hasCaughtSoundPlayed)
+            if(!hasCaughtSoundPlayed)
             {
                 _catchingAsteroidSound.Play();
-                _hasCaughtSoundPlayed = true;
+                hasCaughtSoundPlayed = true;
             }
 
         }
-        Debug.Log("AttractAsteroidHook");
     }
 
     private void OnTriggerStay(Collider other)
