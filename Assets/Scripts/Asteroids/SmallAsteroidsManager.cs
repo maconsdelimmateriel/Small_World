@@ -12,6 +12,10 @@ public class SmallAsteroidsManager : UdonSharpBehaviour
 
     [UdonSynced] private int _indexAsteroidActive = 0;
 
+    //Test
+    [SerializeField] private AsteroidSeasonChange _seasonChange;
+    private bool _hasSeasonChanged = false;
+
     public override void OnPlayerJoined(VRCPlayerApi player)
     {
         if (Networking.IsOwner(gameObject))
@@ -40,6 +44,13 @@ public class SmallAsteroidsManager : UdonSharpBehaviour
         if (_timer >= activationInterval)
         {
             _timer = 0f;
+
+            if (!_hasSeasonChanged)
+            {
+                _seasonChange.StartThaw();
+                _hasSeasonChanged = true;
+            }
+                
             ActivateAsteroidFromPool();
         }
     }
