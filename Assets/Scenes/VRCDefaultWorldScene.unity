@@ -4615,6 +4615,7 @@ MonoBehaviour:
   - {fileID: 1023325636}
   - {fileID: 1244147419}
   activationInterval: 20
+  _seasonChange: {fileID: 0}
 --- !u!1001 &966486495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5366,7 +5367,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1012185817
 RectTransform:
   m_ObjectHideFlags: 0
