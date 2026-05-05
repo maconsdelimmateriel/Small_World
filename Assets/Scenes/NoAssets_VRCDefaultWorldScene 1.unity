@@ -467,8 +467,10 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 103722484}
-  _uiText: {fileID: 1935397721}
-  _fuelBonus: 50
+  _uiSlider: {fileID: 366405538}
+  _fuelBonus: 0.2
+  _fuelLoss: 0.01
+  _counter: 0
 --- !u!65 &103722486
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1730,6 +1732,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &366405538 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8131224968539684489, guid: ef346a00875eb9f44a8060f90bede281,
+    type: 3}
+  m_PrefabInstance: {fileID: 1334657471}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &406517328
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6095,6 +6109,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 8131224968539684489, guid: ef346a00875eb9f44a8060f90bede281,
+        type: 3}
+      propertyPath: m_Value
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8193036818357527523, guid: ef346a00875eb9f44a8060f90bede281,
         type: 3}
