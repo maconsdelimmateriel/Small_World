@@ -17,7 +17,7 @@ public class Alien : UdonSharpBehaviour
     [SerializeField] private GameObject _canvas; //Reference to the dialog canvas.
     [SerializeField] private TextMeshProUGUI _text; //Reference to the text displayed on the dialog canvas.
 
-    private int _language = 0; //Language of the dialog 0: French, 1: English
+    private int _language = 1; //Language of the dialog 0: French, 1: English
     private int _indexDialog = 0; //Index of the current line of dialog displayed.
 
     public string currentSeason = "Winter"; //What season is currently on the asteroid? 

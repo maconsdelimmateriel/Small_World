@@ -10136,6 +10136,21 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 17
       objectReference: {fileID: 0}
+    - target: {fileID: 1849602459157530392, guid: e7c96954d4f9db3448d589d596a2e6a6,
+        type: 3}
+      propertyPath: m_text
+      value: ' 18 Delphini - Musica'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1849602459157530392, guid: e7c96954d4f9db3448d589d596a2e6a6,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 1849602459157530392, guid: e7c96954d4f9db3448d589d596a2e6a6,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 32
+      objectReference: {fileID: 0}
     - target: {fileID: 4159323963449631700, guid: e7c96954d4f9db3448d589d596a2e6a6,
         type: 3}
       propertyPath: m_Layer
@@ -10340,6 +10355,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 7975886258840130256, guid: e7c96954d4f9db3448d589d596a2e6a6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8625552524193649511, guid: e7c96954d4f9db3448d589d596a2e6a6,
         type: 3}
