@@ -1,7 +1,5 @@
 ﻿using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 
 public class AsteroidSeasonChange : UdonSharpBehaviour
 {
@@ -11,14 +9,13 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
     public float maxRadius = 50f;
     public float thawSpeed = 5f;
 
-    private float currentRadius = 0f;
-    private bool thawing = false;
-
-    private Material materialInstance;
+    private Material mat;
+    private float radius;
+    private bool thawing;
 
     void Start()
     {
-        materialInstance = targetRenderer.material;
+        mat = targetRenderer.material;
     }
 
     public void StartThaw()
@@ -30,10 +27,10 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
     {
         if (!thawing) return;
 
-        currentRadius += Time.deltaTime * thawSpeed;
-        currentRadius = Mathf.Min(currentRadius, maxRadius);
+        radius += Time.deltaTime * thawSpeed;
+        radius = Mathf.Min(radius, maxRadius);
 
-        materialInstance.SetVector("_Center", thawOrigin.position);
-        materialInstance.SetFloat("_Radius", currentRadius);
+        mat.SetVector("_Center", thawOrigin.position);
+        mat.SetFloat("_Radius", radius);
     }
 }
