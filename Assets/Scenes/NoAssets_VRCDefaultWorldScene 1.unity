@@ -8569,6 +8569,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: CREDIT_PANEL_COORDINATES
       objectReference: {fileID: 0}
+    - target: {fileID: 5307293496382929433, guid: 1429f4ce574e8874c9277ec8a7307d2e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596197024297018890, guid: 1429f4ce574e8874c9277ec8a7307d2e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596197024297018890, guid: 1429f4ce574e8874c9277ec8a7307d2e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596197024297018890, guid: 1429f4ce574e8874c9277ec8a7307d2e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596197024297018890, guid: 1429f4ce574e8874c9277ec8a7307d2e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
     - target: {fileID: 5900281140699936876, guid: 1429f4ce574e8874c9277ec8a7307d2e,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -8592,7 +8617,7 @@ PrefabInstance:
     - target: {fileID: 5900281140699936876, guid: 1429f4ce574e8874c9277ec8a7307d2e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.03
+      value: -1.81
       objectReference: {fileID: 0}
     - target: {fileID: 5900281140699936876, guid: 1429f4ce574e8874c9277ec8a7307d2e,
         type: 3}
@@ -8633,6 +8658,30 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6919858721732568716, guid: 1429f4ce574e8874c9277ec8a7307d2e,
+        type: 3}
+      propertyPath: m_text
+      value: "La Chasse aux R\xEAves\r\nby Les Ma\xE7ons de l'Imaginaire\r\n\r\nThe
+        Dream Hunt is a poetic world in which players collaborate to awaken alien
+        frozen in pods\u2024 As players fish for asteroids\u201A the environment
+        slowly shifts from winter to spring\u201A guided by a custom spatial music
+        system that adapt to the current season\u2024\r\n(text work in progress)\r\n\r\nLes
+        Ma\xE7ons de l'Imaginaire is a French non profit organization which goal
+        is to create virtual worlds.\r\n\r\nRomane \"redmarian16\" - Game Designer
+        & UI Designer\r\nNiccolo \"NicoSca\" - 3D Artist\r\nCatherine \"Ri Lomako\"
+        - Product Owner\r\nAntoine \"Anthonaar' - Programmer & Association President\r\nYali
+        \"YaliAR\" - Music Composer & Sound Designer"
+      objectReference: {fileID: 0}
+    - target: {fileID: 6919858721732568716, guid: 1429f4ce574e8874c9277ec8a7307d2e,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 6919858721732568716, guid: 1429f4ce574e8874c9277ec8a7307d2e,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 24
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
