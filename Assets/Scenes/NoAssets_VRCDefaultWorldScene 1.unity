@@ -8671,7 +8671,7 @@ PrefabInstance:
         is to create virtual worlds.\r\n\r\nRomane \"redmarian16\" - Game Designer
         & UI Designer\r\nNiccolo \"NicoSca\" - 3D Artist\r\nCatherine \"Ri Lomako\"
         - Product Owner\r\nAntoine \"Anthonaar' - Programmer & Association President\r\nYali
-        \"YaliAR\" - Music Composer & Sound Designer"
+        Arbel \"YaliAR\" - Music Composer & Sound Designer"
       objectReference: {fileID: 0}
     - target: {fileID: 6919858721732568716, guid: 1429f4ce574e8874c9277ec8a7307d2e,
         type: 3}
