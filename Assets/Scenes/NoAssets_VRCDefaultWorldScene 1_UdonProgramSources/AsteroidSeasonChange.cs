@@ -1,36 +1,44 @@
 ﻿using UdonSharp;
 using UnityEngine;
 
+//Changes season when enough fuel is consumed in the heater.
 public class AsteroidSeasonChange : UdonSharpBehaviour
 {
-    public Renderer targetRenderer;
-    public Transform thawOrigin;
+    public Renderer targetRenderer; //Reference to the renderer of the asteroid map.
+    public Transform changeOrigin; //Origin point from which the season change starts.
 
-    public float maxRadius = 50f;
-    public float thawSpeed = 5f;
+    public float maxRadius = 60f; //Maximum radius of the asteroid map affected by the season change.
+    public float changeSpeed = 5f; //Speed at which the season change spreads on the asteroid map.
 
-    private Material mat;
-    private float radius;
-    private bool thawing;
+    private Material _mat; //Material that contains before and after states of the asteroid map.
+    private float _radius; //Current radius of the asteroid map affected by the change.
+    private bool _changing; //Is the season changing?
 
     void Start()
     {
-        mat = targetRenderer.material;
+        _mat = targetRenderer.material;
     }
 
-    public void StartThaw()
+    //Called by the heater to activate the season change. 
+    public void StartChangeActivate()
     {
-        thawing = true;
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "StartChange");
+    }
+
+    //Lets the season change script know that it can start the season change.
+    public void StartChange()
+    {
+        _changing = true;
     }
 
     void Update()
     {
-        if (!thawing) return;
+        if (!_changing) return;
 
-        radius += Time.deltaTime * thawSpeed;
-        radius = Mathf.Min(radius, maxRadius);
+        _radius += Time.deltaTime * changeSpeed;
+        _radius = Mathf.Min(_radius, maxRadius);
 
-        mat.SetVector("_Center", thawOrigin.position);
-        mat.SetFloat("_Radius", radius);
+        _mat.SetVector("_Center", changeOrigin.position);
+        _mat.SetFloat("_Radius", _radius);
     }
 }

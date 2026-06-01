@@ -471,6 +471,9 @@ MonoBehaviour:
   _fuelBonus: 0.2
   _fuelLoss: 0.01
   _counter: 0
+  _totalFuelConsumed: 0
+  _totalfuelNeeded: 100
+  _seasonChange: {fileID: 583848769}
 --- !u!65 &103722486
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2928,9 +2931,9 @@ MonoBehaviour:
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 583848771}
   targetRenderer: {fileID: 583848770}
-  thawOrigin: {fileID: 243579690}
-  maxRadius: 50
-  thawSpeed: 5
+  changeOrigin: {fileID: 243579690}
+  maxRadius: 60
+  changeSpeed: 5
 --- !u!23 &583848770 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 9c0fd3f30aef7a34c9a7231d44dc9503,
@@ -3741,7 +3744,6 @@ MonoBehaviour:
   - {fileID: 1023325636}
   - {fileID: 1244147419}
   activationInterval: 20
-  _seasonChange: {fileID: 583848769}
 --- !u!1001 &966486495
 PrefabInstance:
   m_ObjectHideFlags: 0
