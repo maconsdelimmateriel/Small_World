@@ -20,7 +20,6 @@ public class Heater : UdonSharpBehaviour
     [SerializeField] private AsteroidSeasonChange _seasonChange; //Script that changes the map asteroid season when enough fuel is consumed.
     private bool _hasSeasonChanged = false; //Has the season already changed?
 
-
     public void ReceiveFuelActivate()
     {
         SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ReceiveFuel");

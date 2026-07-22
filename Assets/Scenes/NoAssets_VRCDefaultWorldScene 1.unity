@@ -3006,6 +3006,7 @@ MonoBehaviour:
   changeOrigin: {fileID: 243579690}
   maxRadius: 60
   changeSpeed: 5
+  _plantAnimator: {fileID: 1989745234}
 --- !u!23 &583848770 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 9c0fd3f30aef7a34c9a7231d44dc9503,

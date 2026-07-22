@@ -14,6 +14,8 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
     private float _radius; //Current radius of the asteroid map affected by the change.
     private bool _changing; //Is the season changing?
 
+    [SerializeField] private Animator _plantAnimator; //Animator of a plant that grows when the season is changing.
+
     void Start()
     {
         _mat = targetRenderer.material;
@@ -29,6 +31,7 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
     public void StartChange()
     {
         _changing = true;
+        _plantAnimator.SetTrigger("Grow");
     }
 
     void Update()
