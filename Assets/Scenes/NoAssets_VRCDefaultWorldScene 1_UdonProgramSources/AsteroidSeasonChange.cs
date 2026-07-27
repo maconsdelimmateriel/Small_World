@@ -14,7 +14,10 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
     private float _radius; //Current radius of the asteroid map affected by the change.
     private bool _changing; //Is the season changing?
 
-    [SerializeField] private Animator _plantAnimator; //Animator of a plant that grows when the season is changing.
+    [SerializeField] private Animator[] _plantAnimators; //Animators of the plants that grow when the season is changing.
+    private int _plantIndex = 0; //Keeps track of the number of plants that grew;
+    [SerializeField] private int _growingInterval = 1; //Interval between launching the growing of another plant.
+    private float _growingTimer = 0f; //Timer until next plant growing.
 
     void Start()
     {
@@ -31,7 +34,16 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
     public void StartChange()
     {
         _changing = true;
-        _plantAnimator.SetTrigger("Grow");
+    }
+
+    //Make a single plant grow.
+    public void GrowPlant()
+    {
+        if (_plantAnimators.Length <= _plantIndex)
+        {
+            _plantAnimators[_plantIndex].SetTrigger("Grow");
+            _plantIndex++;
+        }
     }
 
     void Update()
@@ -43,5 +55,12 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
 
         _mat.SetVector("_Center", changeOrigin.position);
         _mat.SetFloat("_Radius", _radius);
+
+        _growingTimer += Time.deltaTime;
+        if(_growingTimer >= _growingInterval)
+        {
+            Debug.Log("Growing");
+            _growingTimer = 0f;
+        }
     }
 }
