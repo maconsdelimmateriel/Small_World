@@ -39,10 +39,11 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
     //Make a single plant grow.
     public void GrowPlant()
     {
-        if (_plantAnimators.Length <= _plantIndex)
+        if (_plantIndex <= _plantAnimators.Length)
         {
             _plantAnimators[_plantIndex].SetTrigger("Grow");
             _plantIndex++;
+            Debug.Log(_plantIndex + "plant");
         }
     }
 
@@ -59,7 +60,7 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
         _growingTimer += Time.deltaTime;
         if(_growingTimer >= _growingInterval)
         {
-            Debug.Log("Growing");
+            GrowPlant();
             _growingTimer = 0f;
         }
     }
