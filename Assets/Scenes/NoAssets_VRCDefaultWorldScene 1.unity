@@ -1655,9 +1655,11 @@ MonoBehaviour:
   DropEventName: 
   ThrowVelocityBoostMinSpeed: 1
   ThrowVelocityBoostScale: 1
+  OutlineRenderers: []
   currentlyHeldBy: {fileID: 0}
   pickupable: 1
   proximity: 2
+  version: 0
 --- !u!54 &184315126
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5407,9 +5409,11 @@ MonoBehaviour:
   DropEventName: 
   ThrowVelocityBoostMinSpeed: 1
   ThrowVelocityBoostScale: 1
+  OutlineRenderers: []
   currentlyHeldBy: {fileID: 0}
   pickupable: 1
   proximity: 2
+  version: 0
 --- !u!54 &483846069
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5659,9 +5663,11 @@ MonoBehaviour:
   DropEventName: 
   ThrowVelocityBoostMinSpeed: 1
   ThrowVelocityBoostScale: 1
+  OutlineRenderers: []
   currentlyHeldBy: {fileID: 0}
   pickupable: 1
   proximity: 2
+  version: 0
 --- !u!114 &483846073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15849,9 +15855,11 @@ MonoBehaviour:
   DropEventName: 
   ThrowVelocityBoostMinSpeed: 1
   ThrowVelocityBoostScale: 1
+  OutlineRenderers: []
   currentlyHeldBy: {fileID: 0}
   pickupable: 1
   proximity: 2
+  version: 0
 --- !u!82 &1261061210
 AudioSource:
   m_ObjectHideFlags: 0
@@ -20267,9 +20275,11 @@ MonoBehaviour:
   DropEventName: 
   ThrowVelocityBoostMinSpeed: 1
   ThrowVelocityBoostScale: 1
+  OutlineRenderers: []
   currentlyHeldBy: {fileID: 0}
   pickupable: 1
   proximity: 2
+  version: 0
 --- !u!54 &1611454897
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24579,9 +24589,11 @@ MonoBehaviour:
   DropEventName: 
   ThrowVelocityBoostMinSpeed: 1
   ThrowVelocityBoostScale: 1
+  OutlineRenderers: []
   currentlyHeldBy: {fileID: 0}
   pickupable: 1
   proximity: 2
+  version: 0
 --- !u!54 &1778349440
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -25906,7 +25918,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1855778126}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -28518,9 +28530,11 @@ MonoBehaviour:
   DropEventName: 
   ThrowVelocityBoostMinSpeed: 1
   ThrowVelocityBoostScale: 1
+  OutlineRenderers: []
   currentlyHeldBy: {fileID: 0}
   pickupable: 1
   proximity: 2
+  version: 0
 --- !u!54 &2000594563
 Rigidbody:
   m_ObjectHideFlags: 0
