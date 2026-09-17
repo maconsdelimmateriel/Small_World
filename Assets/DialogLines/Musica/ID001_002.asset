@@ -15,5 +15,6 @@ MonoBehaviour:
   blocId: ID001
   lineId: _002
   speakerName: 0
+  season: 0
   lineFrench: "Prends toi canne \xE0 p\xEAche mienne. Attraper toi at\xE9roides !"
-  lineEnglish: Take you fishing road. Catch you asteroids!
+  lineEnglish: Take you fishing rod. Catch you asteroids!
