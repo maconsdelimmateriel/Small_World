@@ -126,13 +126,9 @@ MonoBehaviour:
   orbitCenter: {fileID: 0}
   semiMajorAxis: 20
   semiMinorAxis: 200
-  baseOrbitSpeed: 1
-  randomizeSpeed: 1
-  minSpeed: 0.01
-  maxSpeed: 0.1
+  orbitSpeed: 1
   orbitTiltEuler: {x: 0, y: 0, z: 0}
   startAngle: 0
-  randomizeStartAngle: 1
   isCaught: 0
 --- !u!114 &8326612519136410954
 MonoBehaviour:

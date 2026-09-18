@@ -179,7 +179,12 @@ public class FishingRod : UdonSharpBehaviour
 
         if (caughtAsteroid != null)
         {
-            GameObject asteroidFuelPrefab = (GameObject)Instantiate(_asteroidFuelPrefab, caughtAsteroid.transform.position, caughtAsteroid.transform.rotation);
+            if (Networking.IsOwner(gameObject))
+            {
+                GameObject asteroidFuelObj = VRCInstantiate(_asteroidFuelPrefab);
+                asteroidFuelObj.transform.SetPositionAndRotation(caughtAsteroid.transform.position, caughtAsteroid.transform.rotation);
+            }
+
             Destroy(caughtAsteroid);
         }
 
