@@ -9,43 +9,28 @@ public class HookAttractor : UdonSharpBehaviour
     [SerializeField] private FishingRod _rod; //Reference to the fishing rod's script.
     [SerializeField] private float _magneticPullStrength = 5f; //Strength at which an asteroid is pulled toward the hook.
     [SerializeField] private AudioSource _catchingAsteroidSound; //Sound played when an asteroid is caught by the hook.
-    private SmallAsteroid _asteroid; //The asteroid caught by the hook.
-    public bool hasCaughtSoundPlayed = false; //Has the sound for when the asteroid has been caught been played?
 
-    public void AttractAsteroid()
+    //Attract the asteroid slowly toward the hook. Called by the rod on every client.
+    public void PullAsteroid(SmallAsteroid asteroid)
     {
-        _asteroid.isCaught = true;
+        Vector3 direction = (transform.position - asteroid.transform.position).normalized;
+        asteroid.transform.position += direction * _magneticPullStrength * Time.deltaTime;
+    }
 
-        // Attract it slowly toward the hook
-        Vector3 direction = (transform.position - _asteroid.transform.position).normalized;
-        _asteroid.transform.position += direction * _magneticPullStrength * Time.deltaTime;
-
-        // Close enough? Then catch it
-        float dist = Vector3.Distance(transform.position, _asteroid.transform.position);
-        if (dist < 0.3f)
-        {
-            _rod.CatchAsteroid(_asteroid.gameObject);
-
-            if(!hasCaughtSoundPlayed)
-            {
-                _catchingAsteroidSound.Play();
-                hasCaughtSoundPlayed = true;
-            }
-
-        }
+    public void PlayCatchSound()
+    {
+        if (_catchingAsteroidSound != null)
+            _catchingAsteroidSound.Play();
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (!_rod.isSecondTrigger || _rod.isRewinding || _rod.caughtAsteroid != null || _rod.currentLineLength < _rod.maxLineLength) return;
+        //Only the owner of the rod decides which asteroid is caught, the choice is then synced by the rod.
+        if (!Networking.IsOwner(_rod.gameObject)) return;
 
         SmallAsteroid hookedAsteroid = other.GetComponent<SmallAsteroid>();
-        if (hookedAsteroid == null || (hookedAsteroid != _asteroid && _asteroid != null)) return;
+        if (hookedAsteroid == null) return;
 
-        // Check if the object is a valid asteroid
-        _asteroid = other.GetComponent<SmallAsteroid>();
- 
-        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "AttractAsteroid");
-        
+        _rod.TryAttractAsteroid(hookedAsteroid);
     }
 }

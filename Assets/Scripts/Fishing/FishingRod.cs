@@ -4,6 +4,8 @@ using VRC.SDKBase;
 using VRC.Udon;
 
 //Script for the fishing rod.
+//Only the owner of the rod (the player who last picked it up) runs the fishing logic and changes the synced state.
+//Every other client only reads the synced state and replays the visuals (hook, line, sounds, hooked asteroid).
 public class FishingRod : UdonSharpBehaviour
 {
     [Header("Rod Settings")]
@@ -14,83 +16,87 @@ public class FishingRod : UdonSharpBehaviour
     [SerializeField] private float _wobblingSpeed = 3f; //Speed at which the hook woobles in space.
     [SerializeField] private float _wobblingAmplitude = 0.2f; //Amplitude at which the hook wobbles in space.
     [SerializeField] private float _arcHeight = 3f; // Controls the arc peak height of the casting.
-    public float currentLineLength = 0f; //Current length of the casted fishing line.
+    [SerializeField] private float _hookingDistance = 0.3f; //Distance at which an attracted asteroid sticks to the hook.
+    [UdonSynced] public float currentLineLength = 0f; //Current length of the casted fishing line.
 
     [Header("References")]
     [SerializeField] private Transform _rodTip; //Transform of the tip of the fishing rod.
     [SerializeField] private Transform _hook; //Transform of the hook.
     [SerializeField] private LineRenderer lineRenderer; //Component that generates the fishing line.
+    [SerializeField] private SmallAsteroidsManager _asteroidsManager; //Used to sync which asteroid is hooked, as an index in its pool.
+    [SerializeField] private FuelPool _fuelPool; //Pool of networked fuel objects, one is spawned when an asteroid is reeled in.
+    private HookAttractor _hookAttractor; //Script on the hook that detects asteroids.
 
-    [Header("Booleans")]
+    [Header("Synced state")]
     [UdonSynced] public bool isSecondTrigger = false; //Has the trigger already been pulled once?
-    [UdonSynced] private bool _rewindPressed = false; //Should the line rewind?
     [UdonSynced] public bool isRewinding = false; //Is the line being rewinded?
     [UdonSynced] private bool _isCasting = false; //Is the fishing rod in use?
-    [UdonSynced] private bool _isInitialCasting = true;
-    [UdonSynced] private bool _hasExtendingSoundPlayed = false; //Has the sound for when the line is extending been played?
-    [UdonSynced] private bool _hasRewindingSoundPlayed = false; //Has the sound for when the line is extending been played?
-    [UdonSynced] private bool _isHeld = false; //Is a player holding the fishing line?
+    [UdonSynced] private Vector3 _castDirection; //Direction at which the fishing line is casted.
+    [UdonSynced] private int _targetAsteroidIndex = -1; //Index of the asteroid being attracted or hooked, -1 if none.
+    [UdonSynced] private bool _isAsteroidHooked = false; //Has the target asteroid reached the hook?
 
     [Header("Sounds")]
     [SerializeField] private AudioSource _extendingLineSound; //Sound played while the fishing line is extending.
     [SerializeField] private AudioSource _rewindingLineSound; //Sound played while the fishing line is rewinding.
 
-    private Vector3 _castDirection; //Direction at which the fishing line is casted.
-    public GameObject caughtAsteroid; //The asteroid that is currently hooked.
-    [SerializeField]
-    private GameObject _asteroidFuelPrefab; //Prefab of the asteroid that will be used as fuel.
+    //Local state, used by every client to detect changes of the synced state.
+    private bool _wasCasting = false;
+    private int _soundState = 0; //0 = silent, 1 = extending, 2 = wobbling, 3 = rewinding.
+    private int _cachedTargetIndex = -1;
+    private SmallAsteroid _targetAsteroid;
+    private bool _wasHooked = false;
 
+    void Start()
+    {
+        _hookAttractor = _hook.GetComponent<HookAttractor>();
+    }
 
     void Update()
     {
+        if (Networking.IsOwner(gameObject))
+        {
+            OwnerUpdate();
+        }
+        else
+        {
+            //Predict the line between two syncs so it moves smoothly, the synced value corrects it.
+            AdvanceLineLength();
+        }
+
+        ApplyHookParent();
+        PositionHook();
+        UpdateTargetAsteroid();
+        UpdateSounds();
         UpdateLineRenderer();
-        if (currentLineLength >= maxLineLength)
-        {
-            WobbleHook();
-        }
-
-        if (_isHeld)
-        {
-            _hook.rotation = _rodTip.rotation;
-            //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateLineRenderer");
-
-            //2. 
-            if (!_isCasting && isSecondTrigger)
-            {
-                SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "BeginCast");
-            }
-
-            //4.
-            if (_isCasting && !isRewinding && currentLineLength < maxLineLength)
-            {
-                //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ExtendLine");
-                ExtendLine();
-            }
-
-            /*else if (currentLineLength >= maxLineLength)
-            {
-                //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "WobbleHook");
-                WobbleHook();
-            }
-            
-            //B.
-            if (_isCasting && !isSecondTrigger && !isRewinding)
-            {
-                _isCasting = false; // cancel cast if trigger released early
-                isRewinding = true;
-            }*/
-
-            //C.
-            if (isRewinding)
-            {
-                //SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "RewindLine");
-                RewindLine();
-            }
-        }
     }
 
-    //3.
-    public void BeginCast()
+    //Fishing logic, only run by the owner of the rod.
+    private void OwnerUpdate()
+    {
+        if (!_isCasting && isSecondTrigger)
+        {
+            BeginCast();
+        }
+
+        if (!_isCasting) return;
+
+        AdvanceLineLength();
+
+        if (_targetAsteroid != null && !_isAsteroidHooked &&
+            Vector3.Distance(_hook.position, _targetAsteroid.transform.position) < _hookingDistance)
+        {
+            _isAsteroidHooked = true;
+        }
+
+        if (isRewinding && currentLineLength <= 1f)
+        {
+            FinishCatch();
+        }
+
+        RequestSerialization();
+    }
+
+    private void BeginCast()
     {
         _isCasting = true;
         isRewinding = false;
@@ -99,111 +105,175 @@ public class FishingRod : UdonSharpBehaviour
         RequestSerialization();
     }
 
-    //5.
-    public void ExtendLine()
+    private void AdvanceLineLength()
     {
-        currentLineLength += Time.deltaTime * _extendingSpeed;
-        currentLineLength = Mathf.Min(currentLineLength, maxLineLength);
+        if (!_isCasting) return;
 
-        float t = currentLineLength / maxLineLength; // Progress along the cast (0 to 1)
-
-        // Arc: parabola that peaks at t = 0.5
-        float heightOffset = 4 * _arcHeight * t * (1 - t); // max is _arcHeight at midpoint
-
-        Vector3 arcOffset = new Vector3(0f, heightOffset, 0f);
-        _hook.position = _rodTip.position + _castDirection * currentLineLength + arcOffset;
-
-        if (!_hasExtendingSoundPlayed)
+        if (isRewinding)
         {
-            if(_extendingLineSound != null)
-                _extendingLineSound.Play();
-
-            if (_rewindingLineSound != null)
-                _rewindingLineSound.Stop();
-
-            _hasExtendingSoundPlayed = true;
+            currentLineLength = Mathf.Max(currentLineLength - _rewindSpeed * Time.deltaTime, 0f);
+        }
+        else
+        {
+            currentLineLength = Mathf.Min(currentLineLength + _extendingSpeed * Time.deltaTime, maxLineLength);
         }
     }
 
-    public void WobbleHook()
+    //Detaches the hook from the rod while casting, and brings it back afterwards.
+    private void ApplyHookParent()
     {
-        if (_extendingLineSound != null)
-            _extendingLineSound.Stop();
+        if (_isCasting == _wasCasting) return;
+        _wasCasting = _isCasting;
 
-        Vector3 wobble = new Vector3(
-            Mathf.PerlinNoise(Time.time * _wobblingSpeed, 0f) - 0.5f,
-            Mathf.PerlinNoise(0f, Time.time * _wobblingSpeed) - 0.5f,
-            0f
-        ) * _wobblingAmplitude;
-
-        _hook.position = _rodTip.position + _castDirection * currentLineLength + wobble;
-    }
-
-    //D.
-    public void RewindLine()
-    {
-        currentLineLength -= _rewindSpeed * Time.deltaTime;
-
-        currentLineLength = Mathf.Max(currentLineLength, 0f);
-        _hook.position = _rodTip.position + _castDirection * currentLineLength;
-
-        if (!_hasRewindingSoundPlayed)
+        if (_isCasting)
         {
-            if (_rewindingLineSound != null)
-                _rewindingLineSound.Play();
-
-            if (_extendingLineSound != null)
-                _extendingLineSound.Stop();
-
-            _hasRewindingSoundPlayed = true;
+            _hook.parent = this.gameObject.transform.parent;
         }
-
-        if (caughtAsteroid != null)
+        else
         {
-            caughtAsteroid.transform.position = _hook.position;
-        }
-
-        if (currentLineLength <= 1f)
-        {
-            SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "FinishCatch");
+            _hook.parent = this.gameObject.transform;
+            _hook.position = _rodTip.position;
         }
     }
 
-    public void FinishCatch()
+    private void PositionHook()
     {
-        if (_rewindingLineSound != null)
-            _rewindingLineSound.Stop();
+        _hook.rotation = _rodTip.rotation;
 
-        _hasExtendingSoundPlayed = false;
-        _hasRewindingSoundPlayed = false;
+        if (!_isCasting) return;
 
-        if (caughtAsteroid != null)
+        Vector3 linePosition = _rodTip.position + _castDirection * currentLineLength;
+
+        if (isRewinding)
         {
-            if (Networking.IsOwner(gameObject))
+            _hook.position = linePosition;
+        }
+        else if (currentLineLength >= maxLineLength)
+        {
+            Vector3 wobble = new Vector3(
+                Mathf.PerlinNoise(Time.time * _wobblingSpeed, 0f) - 0.5f,
+                Mathf.PerlinNoise(0f, Time.time * _wobblingSpeed) - 0.5f,
+                0f
+            ) * _wobblingAmplitude;
+
+            _hook.position = linePosition + wobble;
+        }
+        else
+        {
+            float t = currentLineLength / maxLineLength; // Progress along the cast (0 to 1)
+
+            // Arc: parabola that peaks at t = 0.5
+            float heightOffset = 4 * _arcHeight * t * (1 - t); // max is _arcHeight at midpoint
+
+            _hook.position = linePosition + new Vector3(0f, heightOffset, 0f);
+        }
+    }
+
+    //Attracts, then sticks the target asteroid to the hook, on every client.
+    private void UpdateTargetAsteroid()
+    {
+        if (_targetAsteroidIndex != _cachedTargetIndex)
+        {
+            //The asteroid got away before being hooked: it resumes its orbit.
+            if (_targetAsteroid != null && !_wasHooked)
             {
-                GameObject asteroidFuelObj = VRCInstantiate(_asteroidFuelPrefab);
-                asteroidFuelObj.transform.SetPositionAndRotation(caughtAsteroid.transform.position, caughtAsteroid.transform.rotation);
+                _targetAsteroid.isCaught = false;
             }
 
-            Destroy(caughtAsteroid);
+            _cachedTargetIndex = _targetAsteroidIndex;
+            _targetAsteroid = null;
+            _wasHooked = false;
+
+            GameObject asteroidObj = _asteroidsManager.GetAsteroid(_targetAsteroidIndex);
+            if (asteroidObj != null)
+            {
+                _targetAsteroid = asteroidObj.GetComponent<SmallAsteroid>();
+            }
         }
 
-        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "ResetLine");
+        if (_targetAsteroid == null || _targetAsteroid.isConsumed) return;
+
+        if (!_isAsteroidHooked)
+        {
+            _targetAsteroid.isCaught = true;
+            _hookAttractor.PullAsteroid(_targetAsteroid);
+        }
+        else if (!_wasHooked)
+        {
+            _wasHooked = true;
+            _targetAsteroid.isCaught = true;
+
+            //Stick asteroid to hook
+            _targetAsteroid.transform.SetParent(_hook);
+            _targetAsteroid.transform.localPosition = Vector3.zero;
+            _targetAsteroid.GetComponent<SphereCollider>().enabled = false;
+
+            _hookAttractor.PlayCatchSound();
+        }
+    }
+
+    //Called by the hook when an asteroid is in range.
+    public void TryAttractAsteroid(SmallAsteroid asteroid)
+    {
+        if (!Networking.IsOwner(gameObject)) return;
+        if (!_isCasting || !isSecondTrigger || isRewinding || _targetAsteroidIndex >= 0 || currentLineLength < maxLineLength) return;
+        if (asteroid.isCaught || asteroid.isConsumed) return; //Already taken by another rod.
+
+        int index = _asteroidsManager.GetAsteroidIndex(asteroid.gameObject);
+        if (index < 0) return;
+
+        _targetAsteroidIndex = index;
+        _isAsteroidHooked = false;
+        RequestSerialization();
+    }
+
+    //Only called by the owner, once the line is back to the rod.
+    private void FinishCatch()
+    {
+        if (_targetAsteroid != null && _isAsteroidHooked)
+        {
+            if (_fuelPool != null)
+            {
+                _fuelPool.SpawnFuel(_targetAsteroid.transform.position, _targetAsteroid.transform.rotation);
+            }
+
+            _targetAsteroid.Consume();
+        }
+
+        ResetLine();
     }
 
     //Resets the line after catching an asteroid so it can catch again.
-    public void ResetLine()
+    private void ResetLine()
     {
         _isCasting = false;
         isRewinding = false;
+        isSecondTrigger = false;
         currentLineLength = 0f;
-        _hook.position = _rodTip.position;
-        _hook.parent = this.gameObject.transform;
+        _targetAsteroidIndex = -1;
+        _isAsteroidHooked = false;
+        RequestSerialization();
+    }
 
-        _hasExtendingSoundPlayed = false;
-        _hasRewindingSoundPlayed = false;
+    //Plays the sounds matching the synced state, on every client.
+    private void UpdateSounds()
+    {
+        int state = 0;
+        if (_isCasting)
+        {
+            if (isRewinding) state = 3;
+            else if (currentLineLength < maxLineLength) state = 1;
+            else state = 2;
+        }
 
-        _hook.gameObject.GetComponent<HookAttractor>().hasCaughtSoundPlayed = false;
+        if (state == _soundState) return;
+        _soundState = state;
+
+        if (_extendingLineSound != null) _extendingLineSound.Stop();
+        if (_rewindingLineSound != null) _rewindingLineSound.Stop();
+
+        if (state == 1 && _extendingLineSound != null) _extendingLineSound.Play();
+        if (state == 3 && _rewindingLineSound != null) _rewindingLineSound.Play();
     }
 
     public void UpdateLineRenderer()
@@ -216,41 +286,16 @@ public class FishingRod : UdonSharpBehaviour
         }
     }
 
-    public void CatchAsteroid(GameObject asteroidObj)
-    {
-        caughtAsteroid = asteroidObj;
-        //isCasting = false;
-        isRewinding = false;
-        //rewindPressed = true;
-
-        //Stick asteroid to hook
-        asteroidObj.transform.SetParent(_hook);
-        asteroidObj.transform.localPosition = Vector3.zero;
-        asteroidObj.GetComponent<SphereCollider>().enabled = false;
-    }
-
-    /*public void OnTriggerEnter(Collider other)
-    {
-        if (!isCasting || isRewinding || caughtAsteroid != null) return;
-
-        SmallAsteroid asteroid = other.GetComponent<SmallAsteroid>();
-
-        if (asteroid != null)
-        {
-            caughtAsteroid = other.gameObject;
-            isRewinding = true;
-        }
-    }*/
-
-    //1. Trigger is held down.
+    //1. Trigger is pressed. Only fires for the player holding the rod, who is its owner.
     public override void OnPickupUseDown()
     {
-        if(!isSecondTrigger)
+        if (!Networking.IsOwner(gameObject)) return;
+
+        if (!_isCasting)
         {
             isSecondTrigger = true;
-            _hook.parent = this.gameObject.transform.parent;
         }
-        else
+        else if (!isRewinding)
         {
             isRewinding = true;
             isSecondTrigger = false;
@@ -261,19 +306,7 @@ public class FishingRod : UdonSharpBehaviour
 
     public override void OnPickup()
     {
-        _isHeld = true;
-        RequestSerialization();
+        //The pickup already transfers ownership, this makes sure the holder runs the rod.
+        Networking.SetOwner(Networking.LocalPlayer, gameObject);
     }
-
-    public override void OnDrop()
-    {
-        _isHeld = false;
-        RequestSerialization();
-    }
-
-    /*//A. Trigger is released.
-    public override void OnPickupUseUp()
-    {
-        isSecondTrigger = false;
-    }*/
 }

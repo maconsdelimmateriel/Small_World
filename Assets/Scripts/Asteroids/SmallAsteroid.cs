@@ -22,9 +22,18 @@ public class SmallAsteroid : UdonSharpBehaviour
     [UdonSynced] public float startAngle = 0f;
 
     [UdonSynced] public bool isCaught = false;
+    [UdonSynced] public bool isConsumed = false; //Has the asteroid been reeled in and turned into fuel?
+
+    private Transform _originalParent; //Parent before being stuck to a hook.
 
     // Sync orbit start time (ms since world start)
     [UdonSynced] private double spawnServerTime;
+
+    void Start()
+    {
+        _originalParent = transform.parent;
+        ApplyConsumed();
+    }
 
     void OnEnable()
     {
@@ -38,7 +47,7 @@ public class SmallAsteroid : UdonSharpBehaviour
 
     void Update()
     {
-        if (orbitCenter == null || isCaught) return;
+        if (orbitCenter == null || isCaught || isConsumed) return;
 
         // Calculate elapsed time since activation (in seconds)
         double currentTime = Networking.GetServerTimeInMilliseconds();
@@ -85,5 +94,31 @@ public class SmallAsteroid : UdonSharpBehaviour
         // - orbitTiltEuler
         // - spawnServerTime
         // And calculate the correct orbit instantly
+        ApplyConsumed();
+    }
+
+    //Called by the rod owner once the asteroid is reeled in. Hidden instead of destroyed, so late joiners and the manager stay in sync.
+    public void Consume()
+    {
+        Networking.SetOwner(Networking.LocalPlayer, gameObject);
+        isConsumed = true;
+        ApplyConsumed();
+        RequestSerialization();
+    }
+
+    private void ApplyConsumed()
+    {
+        if (!isConsumed) return;
+
+        transform.SetParent(_originalParent);
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+        foreach (Renderer r in renderers)
+        {
+            r.enabled = false;
+        }
+
+        SphereCollider col = GetComponent<SphereCollider>();
+        if (col != null) col.enabled = false;
     }
 }

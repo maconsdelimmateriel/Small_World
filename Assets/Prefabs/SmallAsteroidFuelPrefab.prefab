@@ -88,6 +88,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d5ee67eae0f058a40876ab1304d32f9b,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -235,7 +240,7 @@ MonoBehaviour:
   interactText: Use
   interactTextGO: {fileID: 0}
   proximity: 2
-  SynchronizePosition: 0
+  SynchronizePosition: 1
   AllowCollisionOwnershipTransfer: 0
   Reliable: 0
   _syncMethod: 2
@@ -267,3 +272,4 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2790100353603667260}
+  isSpawned: 0

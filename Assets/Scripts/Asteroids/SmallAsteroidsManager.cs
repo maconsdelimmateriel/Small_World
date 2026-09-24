@@ -65,4 +65,20 @@ public class SmallAsteroidsManager : UdonSharpBehaviour
         _indexAsteroidActive++;
         RequestSerialization();
     }
+
+    public GameObject GetAsteroid(int index)
+    {
+        if (index < 0 || index >= _asteroidPool.Length) return null;
+        return _asteroidPool[index];
+    }
+
+    //Index of an asteroid in the pool, so it can be synced as an int. -1 if not found.
+    public int GetAsteroidIndex(GameObject asteroid)
+    {
+        for (int i = 0; i < _asteroidPool.Length; i++)
+        {
+            if (_asteroidPool[i] == asteroid) return i;
+        }
+        return -1;
+    }
 }
