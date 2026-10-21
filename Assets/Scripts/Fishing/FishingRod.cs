@@ -1,11 +1,13 @@
 ﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
+using VRC.SDK3.Components;
 using VRC.Udon;
 
 //Script for the fishing rod.
 //Only the owner of the rod (the player who last picked it up) runs the fishing logic and changes the synced state.
 //Every other client only reads the synced state and replays the visuals (hook, line, sounds, hooked asteroid).
+//Rods given by a FishingRodDistributor stay hidden until spawned. Tick isSpawned in the inspector for a rod that is in the world from the start.
 public class FishingRod : UdonSharpBehaviour
 {
     [Header("Rod Settings")]
@@ -28,6 +30,7 @@ public class FishingRod : UdonSharpBehaviour
     private HookAttractor _hookAttractor; //Script on the hook that detects asteroids.
 
     [Header("Synced state")]
+    [UdonSynced] public bool isSpawned = false; //Is this rod currently in the world?
     [UdonSynced] public bool isSecondTrigger = false; //Has the trigger already been pulled once?
     [UdonSynced] public bool isRewinding = false; //Is the line being rewinded?
     [UdonSynced] private bool _isCasting = false; //Is the fishing rod in use?
@@ -46,13 +49,54 @@ public class FishingRod : UdonSharpBehaviour
     private SmallAsteroid _targetAsteroid;
     private bool _wasHooked = false;
 
+    private VRC_Pickup _pickup;
+    private VRCObjectSync _objectSync;
+    private Renderer[] _renderers;
+    private Collider[] _colliders;
+
     void Start()
     {
         _hookAttractor = _hook.GetComponent<HookAttractor>();
+
+        //The hook is still a child of the rod here, so its renderers and colliders are included.
+        _pickup = (VRC_Pickup)GetComponent(typeof(VRC_Pickup));
+        _objectSync = (VRCObjectSync)GetComponent(typeof(VRCObjectSync));
+        _renderers = GetComponentsInChildren<Renderer>(true);
+        _colliders = GetComponentsInChildren<Collider>(true);
+        ApplySpawnState();
+    }
+
+    //Called by the FishingRodDistributor on the client of its owner.
+    public void Spawn(Vector3 position, Quaternion rotation)
+    {
+        Networking.SetOwner(Networking.LocalPlayer, gameObject);
+
+        transform.SetPositionAndRotation(position, rotation);
+        if (_objectSync != null) _objectSync.FlagDiscontinuity();
+
+        isSpawned = true;
+        ApplySpawnState();
+        RequestSerialization();
+    }
+
+    public override void OnDeserialization()
+    {
+        ApplySpawnState();
+    }
+
+    private void ApplySpawnState()
+    {
+        if (_renderers == null) return; //Start has not run yet, it will apply the state.
+
+        foreach (Renderer r in _renderers) r.enabled = isSpawned;
+        foreach (Collider c in _colliders) c.enabled = isSpawned;
+        if (_pickup != null) _pickup.pickupable = isSpawned;
     }
 
     void Update()
     {
+        if (!isSpawned) return;
+
         if (Networking.IsOwner(gameObject))
         {
             OwnerUpdate();
