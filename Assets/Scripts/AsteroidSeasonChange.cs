@@ -39,7 +39,13 @@ public class AsteroidSeasonChange : UdonSharpBehaviour
     //Make a single plant grow.
     public void GrowPlant()
     {
-        if (_plantIndex <= _plantAnimators.Length)
+        //Skips empty slots so a missing reference doesn't halt the behaviour.
+        while (_plantIndex < _plantAnimators.Length && _plantAnimators[_plantIndex] == null)
+        {
+            _plantIndex++;
+        }
+
+        if (_plantIndex < _plantAnimators.Length)
         {
             _plantAnimators[_plantIndex].SetTrigger("Grow");
             _plantIndex++;

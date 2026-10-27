@@ -49,10 +49,14 @@ public class FishingRod : UdonSharpBehaviour
     private SmallAsteroid _targetAsteroid;
     private bool _wasHooked = false;
 
+    private bool _appliedSpawned = false; //Last spawn state applied to the renderers and colliders.
+    private bool _isHookActive = false; //Is the hook trigger currently able to detect asteroids?
+
     private VRC_Pickup _pickup;
     private VRCObjectSync _objectSync;
     private Renderer[] _renderers;
     private Collider[] _colliders;
+    private Collider[] _hookColliders; //Only enabled while the hook can attract an asteroid, so the trigger costs nothing otherwise.
 
     void Start()
     {
@@ -63,6 +67,8 @@ public class FishingRod : UdonSharpBehaviour
         _objectSync = (VRCObjectSync)GetComponent(typeof(VRCObjectSync));
         _renderers = GetComponentsInChildren<Renderer>(true);
         _colliders = GetComponentsInChildren<Collider>(true);
+        _hookColliders = _hook.GetComponentsInChildren<Collider>(true);
+        _appliedSpawned = !isSpawned; //Forces the first apply.
         ApplySpawnState();
     }
 
@@ -87,17 +93,28 @@ public class FishingRod : UdonSharpBehaviour
     private void ApplySpawnState()
     {
         if (_renderers == null) return; //Start has not run yet, it will apply the state.
+        if (_appliedSpawned == isSpawned) return; //Nothing changed, skips looping over every renderer and collider.
+        _appliedSpawned = isSpawned;
 
         foreach (Renderer r in _renderers) r.enabled = isSpawned;
         foreach (Collider c in _colliders) c.enabled = isSpawned;
         if (_pickup != null) _pickup.pickupable = isSpawned;
+
+        //The line is only shown while casting, and the hook trigger only while it can attract.
+        if (lineRenderer) lineRenderer.enabled = isSpawned && _isCasting;
+        _isHookActive = true; //The loop above may have enabled the hook colliders, this forces them off again.
+        SetHookActive(false);
     }
 
     void Update()
     {
         if (!isSpawned) return;
 
-        if (Networking.IsOwner(gameObject))
+        //Nothing moves while the rod is idle: the hook rides on the rod as its child.
+        if (!_isCasting && !_wasCasting) return;
+
+        bool isOwner = Networking.IsOwner(gameObject);
+        if (isOwner)
         {
             OwnerUpdate();
         }
@@ -112,16 +129,24 @@ public class FishingRod : UdonSharpBehaviour
         UpdateTargetAsteroid();
         UpdateSounds();
         UpdateLineRenderer();
+
+        //Only the owner detects asteroids, and only once the line is fully extended with nothing on it.
+        SetHookActive(isOwner && _isCasting && isSecondTrigger && !isRewinding &&
+                      _targetAsteroidIndex < 0 && currentLineLength >= maxLineLength);
+    }
+
+    //Enables the hook trigger only when needed, so OnTriggerStay doesn't run against everything it touches.
+    private void SetHookActive(bool active)
+    {
+        if (active == _isHookActive) return;
+        _isHookActive = active;
+
+        foreach (Collider c in _hookColliders) c.enabled = active;
     }
 
     //Fishing logic, only run by the owner of the rod.
     private void OwnerUpdate()
     {
-        if (!_isCasting && isSecondTrigger)
-        {
-            BeginCast();
-        }
-
         if (!_isCasting) return;
 
         AdvanceLineLength();
@@ -130,14 +155,13 @@ public class FishingRod : UdonSharpBehaviour
             Vector3.Distance(_hook.position, _targetAsteroid.transform.position) < _hookingDistance)
         {
             _isAsteroidHooked = true;
+            RequestSerialization();
         }
 
         if (isRewinding && currentLineLength <= 1f)
         {
             FinishCatch();
         }
-
-        RequestSerialization();
     }
 
     private void BeginCast()
@@ -168,6 +192,8 @@ public class FishingRod : UdonSharpBehaviour
     {
         if (_isCasting == _wasCasting) return;
         _wasCasting = _isCasting;
+
+        if (lineRenderer) lineRenderer.enabled = _isCasting;
 
         if (_isCasting)
         {
@@ -338,6 +364,7 @@ public class FishingRod : UdonSharpBehaviour
         if (!_isCasting)
         {
             isSecondTrigger = true;
+            BeginCast();
         }
         else if (!isRewinding)
         {

@@ -10,10 +10,17 @@ using VRC.Udon.Common.Interfaces;
 [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
 public class FishingRodDistributor : UdonSharpBehaviour
 {
-    [SerializeField] private FishingRod[] _rods; //Fishing rods in the scene, hidden until distributed.
+    [SerializeField] private Transform _rodsContainer; //Empty whose children are the fishing rods, hidden until distributed.
     [SerializeField] private Transform _spawnPoint; //Where a distributed rod appears.
     [SerializeField] private AudioSource _distributeSound; //Sound played on every client when a rod is distributed.
     [SerializeField] private AudioSource _emptySound; //Sound played locally when the pool is empty.
+
+    private FishingRod[] _rods; //Fishing rods found under the container.
+
+    void Start()
+    {
+        _rods = _rodsContainer.GetComponentsInChildren<FishingRod>(true);
+    }
 
     public override void Interact()
     {

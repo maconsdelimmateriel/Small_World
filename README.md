@@ -43,9 +43,9 @@ A VRChat world (Unity/UdonSharp) set on a small orbiting asteroid. Players keep 
 These scripts expect specific references to be assigned in the Inspector — missing links will cause `NullReferenceException`s at runtime:
 
 - **Heater** ([Assets/Prefabs](Assets/Prefabs) has no Heater prefab; it exists directly in-scene) needs its `AsteroidSeasonChange` reference and UI `Slider` assigned.
-- **AsteroidSeasonChange** needs a `targetRenderer` (asteroid map material) and `changeOrigin` transform, plus its `_plantAnimators` array populated.
-- **FishingRod** (prefab: [Assets/Prefabs/FishingRod.prefab](Assets/Prefabs/FishingRod.prefab)) needs `_rodTip`, `_hook`, `lineRenderer`, `_asteroidsManager`, and `_fuelPool` assigned. Rods start hidden (`isSpawned` off) until a distributor spawns them; tick `isSpawned` in the Inspector for a rod that should be in the world from the start.
-- **FishingRodDistributor** needs a collider (for `Interact`), its `_rods` array populated with in-scene `FishingRod` instances, and a `_spawnPoint` Transform (falls back to the distributor's own transform). `_distributeSound` (played for everyone) and `_emptySound` (played locally when no rod is left) are optional.
+- **AsteroidSeasonChange** needs a `targetRenderer` (asteroid map material) and `changeOrigin` transform, plus its `_plantAnimators` array populated. Empty slots are skipped, but the plants in them will never grow.
+- **FishingRod** (prefab: [Assets/Prefabs/FishingRod.prefab](Assets/Prefabs/FishingRod.prefab)) needs `_rodTip`, `_hook`, `lineRenderer`, `_asteroidsManager`, and `_fuelPool` assigned. Rods start hidden (`isSpawned` off) until a distributor spawns them; tick `isSpawned` in the Inspector for a rod that should be in the world from the start. The rod enables its hook's colliders only while the hook can attract an asteroid (owner, line fully extended, nothing caught), so don't rely on the hook collider for anything else.
+- **FishingRodDistributor** needs a collider (for `Interact`), its `_rodsContainer` set to the empty whose children are the in-scene `FishingRod` instances (collected at `Start`, so adding a rod only means parenting it under that empty), and a `_spawnPoint` Transform (falls back to the distributor's own transform). `_distributeSound` (played for everyone) and `_emptySound` (played locally when no rod is left) are optional.
 - **FuelPool** needs its `_fuels` array populated with in-scene [Assets/Prefabs/SmallAsteroidFuelPrefab.prefab](Assets/Prefabs/SmallAsteroidFuelPrefab.prefab) instances.
 - **HookAttractor** needs a `_rod` reference back to its `FishingRod`.
 - **SmallAsteroidsManager** needs its `_asteroidPool` array populated with [Assets/Prefabs/SmallAsteroidPrefab.prefab](Assets/Prefabs/SmallAsteroidPrefab.prefab) instances.
@@ -85,7 +85,7 @@ Assets/
 └── Audio/                  # Includes a "Winter Track" audio object referenced in the scene
 ```
 
-Top-level GameObjects in the working scene: `Directional Light`, `EventSystem`, `Main Camera`, `VRCWorld`, `Heater`, `SmallAsteroidsManager`, `PodPlaceholder`, `RespawnNet`, `Winter Track`, and five `FishingRod2*` instances.
+Top-level GameObjects in the working scene: `Directional Light`, `EventSystem`, `Main Camera`, `VRCWorld`, `Heater`, `SmallAsteroidsManager`, `PodPlaceholder`, `RespawnNet`, `Winter Track`, and the fishing rod distributor with its rods container (any number of `FishingRod` instances can be parented under it).
 
 ## Build & Publish for VRChat
 
@@ -100,7 +100,6 @@ Top-level GameObjects in the working scene: `Directional Light`, `EventSystem`, 
 
 - **[Heater.cs:44-69](Assets/Scripts/Heater.cs#L44-L69)** — `Update()` decrements the synced fuel `_counter` without checking object ownership (unlike [SmallAsteroidsManager.cs](Assets/Scripts/Asteroids/SmallAsteroidsManager.cs), which explicitly gates its `Update()` behind `Networking.IsOwner(gameObject)`). Every client running this loop independently could cause fuel-counter desync or conflicting `RequestSerialization()` calls. [NEEDS REVIEW]
 - **[Heater.cs:72-76](Assets/Scripts/Heater.cs#L72-L76)** and **[SmallAsteroid.cs:80-88](Assets/Scripts/Asteroids/SmallAsteroid.cs#L80-L88)** — `OnDeserialization()` overrides are empty except for comments listing what late joiners "now get" (e.g. "- counter", "- orbitSpeed"). No corrective/UI-refresh logic actually runs here; it's unclear if this is intentional (relying purely on synced field auto-updates) or an incomplete stub.
-- **[AsteroidSeasonChange.cs:42](Assets/Scripts/AsteroidSeasonChange.cs#L42)** — `GrowPlant()` uses `if (_plantIndex <= _plantAnimators.Length)`, an off-by-one bounds check; when `_plantIndex == _plantAnimators.Length`, indexing `_plantAnimators[_plantIndex]` will throw an `IndexOutOfRangeException`.
 - **[Other/RespawnNet.cs:9-12](Assets/Scripts/Other/RespawnNet.cs#L9-L12)** — a dangling `[SerializeField]` attribute (line 11) has no field after it before the next method; likely a leftover from a deleted field declaration. Should be removed or completed.
 - **[Alien.cs:11](Assets/Scripts/Alien/Alien.cs#L11)** — the `dialogLines` array (`UnityEngine.Object[]`, presumably meant to hold `DialogLine` ScriptableObjects) is declared but never read anywhere in the script; dialog is actually driven by the separate parallel `lineFrench` / `lineEnglish` / `season` string arrays. This suggests a planned migration to data-driven `DialogLine` assets (which do exist under `Assets/DialogLines/Musica/`) that was never finished.
 - **[Fishing/FishingRodDistributor.cs](Assets/Scripts/Fishing/FishingRodDistributor.cs)** — distributed rods are never returned to the pool; once every rod is out, the distributor only plays its empty sound. Clicking again before the last rod is picked up also stacks rods at the spawn point.
